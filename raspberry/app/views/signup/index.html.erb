@@ -1,0 +1,33 @@
+<% if !@request_status.blank? %>
+<div class='alert-message <%= @request_status['status'] %>'>
+<%= @request_status['message'] %>
+</div>
+<% end %>
+<%= form_tag({:action => 'save'}, {:method => "post"}) do %>
+  <div class="clearfix <%= check_error(@error_message_email) %>">
+    <label>e-mail</label>
+    <div class="input">
+      <input class="xlarge <%= check_error(@error_message_email) %>" id="email" name="email" size="30" type="text" value="<%= params[:email] %>" />
+      <span class="help-inline"><%= @error_message_email %></span>
+    </div>
+  </div>
+  <div class="clearfix <%= check_error(@error_message_password) %>">
+    <label>password</label>
+    <div class="input">
+      <input class="xlarge <%= check_error(@error_message_password) %>" id="password" name="password" size="30" type="password" />
+      <span class="help-inline"><%= @error_message_password %></span>
+    </div>
+  </div>
+  <div class="clearfix  <%= check_error(@error_message_confirmpassword) %>">
+    <label>confirm password</label>
+    <div class="input">
+      <input class="xlarge  <%= check_error(@error_message_confirmpassword) %>" id="confirmpassword" name="confirmpassword" size="30" type="password" />
+      <span class="help-inline"><%= @error_message_confirmpassword %></span>
+    </div>
+  </div>
+  <div class="actions">
+    <input type="submit" class="btn primary" value="Save changes">&nbsp;
+    <button type="reset" class="btn">Cancel</button>
+    <br>
+  </div>
+<% end %>
