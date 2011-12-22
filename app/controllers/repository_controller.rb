@@ -28,6 +28,14 @@ class RepositoryController < ApplicationController
 
 
   def showInfo
-  	
+  	@issue = Issue.find(params[:id])
+    @comment = IssueComment.new
+    @comments = IssueComment.where(:parent_id => params[:id]).order("created_at")
+    @body = @issue.body
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @issue }
+    end
   end
 end
