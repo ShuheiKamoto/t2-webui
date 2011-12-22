@@ -10,20 +10,15 @@ Raspberry::Application.routes.draw do
     match 'signout', :to => :signout
   end
 
-
   controller :signup do
     match 'signup', :to => :index
     match 'signupsave', :to => :save
   end
-  
-  
-  
+
   controller :repository do
     match 'repository', :to => :index
-  	match 'generalinfo', :to => :showInfo
+    match 'generalinfo', :to => :show_info
   end
-  
-  
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

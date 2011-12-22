@@ -32,13 +32,12 @@ class SignupController < ApplicationController
       if @error_count > 0
         raise "Please correct the error and then retry"
       else
-        hc = HTTPClient.new
-        #html = hc.get_content("http://localhost:8080/api/users/", "post")
-        #p html
-        
         postdata = '{"email":"' + params[:email] + '","password":"' + params[:password] + '"}'
-        puts hc.post_content("http://" + API_SERVER + "/api/users/", postdata, [['content-type', 'application/json'], ['Accept', 'application/json']])
-        
+        con = ApiConnector::Connect.new()
+        res = con.post("users", postdata)
+        p "*-*-*-*-*-*-status"
+        p res.status
+        p res.body
         
         @request_status['status'] = "success"
         @request_status['message'] = "Registration Success! Please enjoy after login."

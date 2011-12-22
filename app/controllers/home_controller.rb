@@ -7,29 +7,7 @@ class HomeController < ApplicationController
 
   def index
     if session[:auth_key]
-      #redirect_to :controller => "repository", :action => "index"
-#      @app_list = []
-#      begin
-#        @request_status = {"status"=>"error", "message"=>""}
-##        hc = HTTPClient.new
-#        html = hc.get_content("http://" + API_SERVER + "/api/apps/")
-#        apps = JSON.parse(html)
-##        apps.each do |app|
-#          if (app['owner'])['email'] == session[:email]
-#            @app_list << app['name']
-#          end
-#        end
-#        @request_status['status'] = "none"
-#      rescue HTTPClient::BadResponseError => e
-#        @request_status['message'] = "Failed to register. Please try again..."
-#      rescue RuntimeError => e
-#        @request_status['message'] = e.message
-#      rescue => e
-#        @request_status['message'] = e.message
-#      end
-      
-#      render :template => 'home/dashboard'
-redirect_to "/repository"
+      redirect_to "/repository"
     end
   end
 
@@ -42,9 +20,9 @@ redirect_to "/repository"
       if params[:password].blank?
         raise 'Can not log in because of an incorrect email or password!'
       end
-      hc = HTTPClient.new
-      html = hc.get_content("http://" + API_SERVER + "/api/users/")
-      users = JSON.parse(html)
+      con = ApiConnector::Connect.new()
+      res = con.get("users")
+      users = JSON.parse(res.body)
       users.each do |user|
         if params[:email] == user['email'] && Digest::SHA512.hexdigest(params[:password]) == user['password']
           session[:auth_key] = "key"
