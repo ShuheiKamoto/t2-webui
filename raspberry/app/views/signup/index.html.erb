@@ -1,20 +1,15 @@
-<% if !@request_status.blank? %>
-<div class='alert-message <%= @request_status['status'] %>'>
-<%= @request_status['message'] %>
-</div>
-<% end %>
 <%= form_tag({:action => 'save'}, {:method => "post"}) do %>
   <div class="clearfix <%= check_error(@error_message_email) %>">
     <label>e-mail</label>
     <div class="input">
-      <input class="xlarge <%= check_error(@error_message_email) %>" id="email" name="email" size="30" type="text" value="<%= params[:email] %>" />
+      <input class="xlarge <%= check_error(@error_message_email) %>" id="email" name="email" maxlength="30" type="email" placeholder="Email" value="<%= params[:email] %>" />
       <span class="help-inline"><%= @error_message_email %></span>
     </div>
   </div>
   <div class="clearfix <%= check_error(@error_message_password) %>">
     <label>password</label>
     <div class="input">
-      <input class="xlarge <%= check_error(@error_message_password) %>" id="password" name="password" size="30" type="password" />
+      <input class="xlarge <%= check_error(@error_message_password) %>" id="password" name="password" maxlength="30" type="password" placeholder="Password" />
       <span class="help-inline"><%= @error_message_password %></span>
     </div>
   </div>

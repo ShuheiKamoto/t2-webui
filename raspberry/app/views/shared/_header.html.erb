@@ -1,17 +1,30 @@
+<% if !@request_status.blank? %>
+  <% if @request_status['status'] != 'none' %>
+    <div class='alert-message <%= @request_status['status'] %>'>
+      <%= @request_status['message'] %>
+    </div>
+  <% end %>
+<% end %>
 <div class="topbar">
   <div class="fill">
     <div class="container">
-      <a class="brand" href="/">RaspBerry Alpha</a>
+      <a class="brand" href="/"><img src="logo.png" width="90%" height="90%"  /></a>
       <ul class="nav">
-        <li class="active"><a href="home">Home</a></li>
+        <li class="active"><a href="/home">Home</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
-      <form action="" class="pull-right">
-        <input class="input-small" type="email" placeholder="Email">
-        <input class="input-small" type="password" placeholder="Password">
-        <button class="btn" type="submit">Sign in</button>
-      </form>
+      <% if session[:auth_key] %>
+        <%= form_tag({:controller => "home", :action => 'signout'}, {:method => "post", :class=>"pull-right"}) do %>
+          <button class="btn" type="submit">Sign out</button>
+        <% end %>
+      <% else %>
+        <%= form_tag({:controller => "home", :action => 'authorize'}, {:method => "post", :class=>"pull-right"}) do %>
+          <input class="input-small" type="email" placeholder="Email" id="email" name="email" maxlength="30">
+          <input class="input-small" type="password" placeholder="Password" id="password" name="password" maxlength="30">
+          <button class="btn" type="submit">Sign in</button>
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>

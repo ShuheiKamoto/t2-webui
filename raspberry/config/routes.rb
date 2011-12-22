@@ -1,9 +1,13 @@
 Raspberry::Application.routes.draw do
   
+  get "repository/index"
+
   root :to => 'home#index'
   
   controller :home do
     match 'home', :to => :index
+    match 'authorize', :to => :authorize
+    match 'signout', :to => :signout
   end
 
 
@@ -12,6 +16,12 @@ Raspberry::Application.routes.draw do
     match 'signupsave', :to => :save
   end
   
+  
+  
+  controller :repository do
+    match 'repository', :to => :index
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
