@@ -1,0 +1,30 @@
+<div class="hero-unit">
+<script src="./jquery-1.7.1.min.js"></script>
+<script src="./jquery.tablesorter.min.js"></script>
+      <div class="alert-message block-message info">
+        <p style="font-size: xx-large"><strong>MyApps</strong></p>
+      </div>
+    <table id="myapps" class="zebra-striped">
+      <thead>
+        <tr>
+          <th class="blue header">Application Name</th>
+          <th class="blue header">Repository Info</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @app_list.each do |app| %>
+        <tr>
+          <td><%= app %></td>
+          <td><a href="generalinfo"><button class="btn info">Infomation</button></a></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+<script>
+$(function() {
+$("table#myapps").tablesorter();
+});
+</script>
+
+</div>
+
