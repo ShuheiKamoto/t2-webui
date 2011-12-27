@@ -1,0 +1,19 @@
+<div class="hero-unit">
+  <div class="alert-message block-message info">
+    <p style="font-size: xx-large;width:400px;"><strong>Application create</strong></p>
+  </div>
+  <%= form_tag({:action => 'create'}, {:method => "post"}) do %>
+    <div class="clearfix <%= check_error(@error_message_email) %>">
+      <label>Application Name</label>
+      <div class="input">
+        <input class="xlarge <%= check_error(@error_message_email) %>" id="application_name" name="application_name" maxlength="30" type="" placeholder="" value="<%= params[:application_name] %>" />
+        <span class="help-inline"><%= @error_message_email %></span>
+      </div>
+    </div>
+    <div class="actions">
+      <input type="submit" class="btn primary" value="Create">&nbsp;
+      <br>
+    </div>
+    <input type="hidden" name="mode" value="execute">
+  <% end %>
+</div>

@@ -14,9 +14,11 @@ module ApiConnector
       header = [['content-type', 'application/json'], ['Accept', 'application/json']]
       request( :get, api_name, key, query, body, header)
     end
-    #def put()
+    def put(api_name, body=nil)
       # put
-    #end
+      header = [['content-type', 'application/json'], ['Accept', 'application/json']]
+      request( :put, api_name, "", nil, body, header)
+    end
     def post(api_name, body=nil)
       # post
       header = [['content-type', 'application/json'], ['Accept', 'application/json']]

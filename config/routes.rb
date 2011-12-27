@@ -18,6 +18,9 @@ Raspberry::Application.routes.draw do
   controller :repository do
     match 'repository', :to => :index
     match 'applicationdetail', :to => :detail
+    match 'applicationcreate', :to => :create
+    match 'applicationupload', :to => :upload
+    match 'applicationhistory', :to => :history
   end
 
   # The priority is based upon order of creation:

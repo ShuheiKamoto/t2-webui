@@ -1,13 +1,12 @@
+<div class="alert-message block-message info">
+  <p style="font-size: xx-large;width:400px;"><strong><%= @app_detail["name"] %></strong></p>
+</div>
 <div class="hero-unit">
   <table id="myapps" class="zebra-striped">
     <tbody>
     <tr>
       <th class="blue header">application ID</th>
       <td><%= @app_detail["id"] %></td>
-    </tr>
-    <tr>
-      <th class="blue header">application name</th>
-      <td><%= @app_detail["name"] %></td>
     </tr>
     <tr>
       <th class="blue header">URL</th>
@@ -28,34 +27,72 @@
     <tr>
       <th class="blue header">collaborators</th>
       <td style="padding-left:0px">
-        
         <table>
           <% @app_detail["collaborators"].each do |col| %>
-          <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
+          
           <tr>
             <td style="border:none">
               <%= col['email'] %>
             </td>
+            <td style="text-align:left; border:none">
+              <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
+                <div class="input" style="margin:0px">
+                  <%= select_tag('mod_role' , options_for_select([["R","R"],["W","W"],["RW","RW"]], col['role']), { :class => 'small' }) %>
+                  <button class="btn success">U</button>
+                </div>
+                <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
+                <input type="hidden" name="mode" value="mod_collaborator_role">
+                <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
+                <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
+                <input type="hidden" name="instance_count" value="<%= @app_detail["instance_count"] %>">
+                <input type="hidden" name="collaborators" value="<%= @app_detail["collaborators"].to_json %>">
+                <input type="hidden" name="modcoll" value="<%= col['email'] %>">
+              <% end %>
+            </td>
             <td style="text-align:right; border:none">
-              <button class="btn error">×</button>
+              <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
+                <button class="btn error">×</button>
+                <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
+                <input type="hidden" name="mode" value="del_collaborator">
+                <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
+                <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
+                <input type="hidden" name="instance_count" value="<%= @app_detail["instance_count"] %>">
+                <input type="hidden" name="collaborators" value="<%= @app_detail["collaborators"].to_json %>">
+                <input type="hidden" name="del_collaborator" value="<%= col['email'] %>">
+              <% end %>
             </td>
           </tr>
-          <% end %>
+          
           <% end %>
           <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
           <tr>
             <td style="border:none">
               <div class="clearfix <%= check_error(@error_message_email) %>">
                 <div class="input">
-                  <input class="xlarge <%= check_error(@error_message_email) %>" id="email" name="email" maxlength="30" type="email" placeholder="Email" value="<%= params[:email] %>" />
+                  <input class="xlarge <%= check_error(@error_message_email) %>" id="new_col" name="new_col" maxlength="30" type="email" placeholder="Email" value="<%= params[:email] %>" />
                   <span class="help-inline"><%= @error_message_email %></span>
                 </div>
+              </div>
+            </td>
+            <td style="border:none">
+              <div class="input">
+                <select id="new_role" name="new_role" class="small">
+                  <option>R</option>
+                  <option>W</option>
+                  <option>RW</option>
+                </select>
               </div>
             </td>
             <td style="text-align:right; border:none">
               <button class="btn primary">＋</button>
             </td>
           </tr>
+            <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
+            <input type="hidden" name="mode" value="add_collaborator">
+            <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
+            <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
+            <input type="hidden" name="instance_count" value="<%= @app_detail["instance_count"] %>">
+            <input type="hidden" name="collaborators" value="<%= @app_detail["collaborators"].to_json %>">
           <% end %>
         </table>
         
@@ -77,9 +114,15 @@
               </div>
             </td>
             <td style="text-align:right; border:none">
-              <button class="btn primary">change</button>
+              <button class="btn success">U</button>
             </td>
           </tr>
+          <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
+          <input type="hidden" name="mode" value="mod_instance">
+          <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
+          <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
+          <input type="hidden" name="instance_count" value="<%= @app_detail["instance_count"] %>">
+          <input type="hidden" name="collaborators" value="<%= @app_detail["collaborators"].to_json %>">
           <% end %>
         
         </table>
