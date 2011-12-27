@@ -2,34 +2,55 @@ class RepositoryController < ApplicationController
   def index
     @app_list = []
     begin
-      @request_status = {"status"=>"error", "message"=>""}
+      @view_status = ViewStatus::Status.new()
       con = ApiConnector::Connect.new()
       res = con.get("apps")
+      @view_status.display({"200"=>false})
+      @view_status.select_message(res)
+      if res.status >= 400
+        raise @view_status.message
+      end
       apps = JSON.parse(res.body)
       apps.each do |app|
         if (app['owner'])['email'] == session[:email]
-          @app_list << app['name']
+          @app_list << {"id"=>app['id'], "name"=>app['name']}
         end
       end
-      @request_status['status'] = "none"
-    rescue HTTPClient::BadResponseError => e
-      @request_status['message'] = "Failed to register. Please try again..."
-    rescue RuntimeError => e
-      @request_status['message'] = e.message
     rescue => e
-      @request_status['message'] = e.message
+      @view_status.status = @view_status.error
+      @view_status.message = e.message
     end
   end
 
-  def show_info
-    @issue = Issue.find(params[:id])
-    @comment = IssueComment.new
-    @comments = IssueComment.where(:parent_id => params[:id]).order("created_at")
-    @body = @issue.body
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @issue }
+  def detail
+    @app_detail = {}
+    begin
+      @view_status = ViewStatus::Status.new()
+      con = ApiConnector::Connect.new()
+      res = con.get("apps", params[:appid])
+      @view_status.display({"200"=>false})
+      @view_status.select_message(res)
+      if res.status >= 400
+        raise @view_status.message
+      end
+      app = JSON.parse(res.body)
+      p app
+      collaborators = []
+      app['collaborators'].each do |col|
+        collaborators << {"email"=>col['email'], "role"=>col['role']}
+      end
+      @app_detail = {"id" => app['id'], 
+                    "name" => app['name'],
+                    "url" => "",
+                    "git_address" => "",
+                    "datasource" => "",
+                    "owner" => (app['owner'])['email'],
+                    "collaborators" => collaborators,
+                    "instance_count" => app['appServerInstance'].count.to_s,
+                    "version" => app['appVersion']}
+    rescue => e
+      @view_status.status = @view_status.error
+      @view_status.message = e.message
     end
   end
 end

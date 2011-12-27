@@ -13,7 +13,7 @@ class HomeController < ApplicationController
 
   def authorize
     begin
-      @request_status = {"status"=>"error", "message"=>""}
+      @view_status = ViewStatus::Status.new()
       if params[:email].blank?
         raise 'Can not log in because of an incorrect email or password!'
       end
@@ -22,6 +22,11 @@ class HomeController < ApplicationController
       end
       con = ApiConnector::Connect.new()
       res = con.get("users")
+      @view_status.display({"200"=>false})
+      @view_status.select_message(res)
+      if res.status >= 400
+        raise @view_status.message
+      end
       users = JSON.parse(res.body)
       users.each do |user|
         if params[:email] == user['email'] && Digest::SHA512.hexdigest(params[:password]) == user['password']
@@ -30,21 +35,16 @@ class HomeController < ApplicationController
           break
         end
       end
-      
-      @request_status['message'] = "login Success!"
-    rescue HTTPClient::BadResponseError => e
-      @request_status['message'] = "Failed to register. Please try again..."
-    rescue RuntimeError => e
-      @request_status['message'] = e.message
     rescue => e
-      @request_status['message'] = e.message
+      @view_status.status = @view_status.error
+      @view_status.message = e.message
     end
     
     if session[:auth_key]
-      @request_status['status'] = "success"
+      @view_status.status = @view_status.success
       redirect_to :controller => "home", :action => "index"
     else
-      @request_status['message'] = 'Can not log in because of an incorrect email or password!'
+      @view_status.message = 'Can not log in because of an incorrect email or password!'
       render :controller => "home", :action => "index"
     end
   end

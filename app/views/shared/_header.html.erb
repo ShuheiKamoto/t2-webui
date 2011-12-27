@@ -1,9 +1,7 @@
-<% if !@request_status.blank? %>
-  <% if @request_status['status'] != 'none' %>
-    <div class='alert-message <%= @request_status['status'] %>'>
-      <%= @request_status['message'] %>
-    </div>
-  <% end %>
+<% if (!@view_status.blank?) && (@view_status.class == ViewStatus::Status) && (@view_status.status != @view_status.none) %>
+  <div class='alert-message <%= @view_status.status %>'>
+    <%= @view_status.message %>
+  </div>
 <% end %>
 <div class="topbar">
   <div class="fill">
@@ -16,6 +14,7 @@
       </ul>
       <% if session[:auth_key] %>
         <%= form_tag({:controller => "home", :action => 'signout'}, {:method => "post", :class=>"pull-right"}) do %>
+          <span class="label notice"><%= session[:email] %></span>
           <button class="btn" type="submit">Sign out</button>
         <% end %>
       <% else %>

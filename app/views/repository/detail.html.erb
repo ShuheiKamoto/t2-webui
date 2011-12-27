@@ -1,0 +1,95 @@
+<div class="hero-unit">
+  <table id="myapps" class="zebra-striped">
+    <tbody>
+    <tr>
+      <th class="blue header">application ID</th>
+      <td><%= @app_detail["id"] %></td>
+    </tr>
+    <tr>
+      <th class="blue header">application name</th>
+      <td><%= @app_detail["name"] %></td>
+    </tr>
+    <tr>
+      <th class="blue header">URL</th>
+      <td><%= @app_detail["url"] %></td>
+    </tr>
+    <tr>
+      <th class="blue header">git address</th>
+      <td><%= @app_detail["git_address"] %></td>
+    </tr>
+    <tr>
+      <th class="blue header">datasource</th>
+      <td><%= @app_detail["datasource"] %></td>
+    </tr>
+    <tr>
+      <th class="blue header">owner</th>
+      <td><%= @app_detail["owner"] %></td>
+    </tr>
+    <tr>
+      <th class="blue header">collaborators</th>
+      <td style="padding-left:0px">
+        
+        <table>
+          <% @app_detail["collaborators"].each do |col| %>
+          <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
+          <tr>
+            <td style="border:none">
+              <%= col['email'] %>
+            </td>
+            <td style="text-align:right; border:none">
+              <button class="btn error">×</button>
+            </td>
+          </tr>
+          <% end %>
+          <% end %>
+          <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
+          <tr>
+            <td style="border:none">
+              <div class="clearfix <%= check_error(@error_message_email) %>">
+                <div class="input">
+                  <input class="xlarge <%= check_error(@error_message_email) %>" id="email" name="email" maxlength="30" type="email" placeholder="Email" value="<%= params[:email] %>" />
+                  <span class="help-inline"><%= @error_message_email %></span>
+                </div>
+              </div>
+            </td>
+            <td style="text-align:right; border:none">
+              <button class="btn primary">＋</button>
+            </td>
+          </tr>
+          <% end %>
+        </table>
+        
+      </td>
+    </tr>
+    <tr>
+      <th class="blue header">instance count</th>
+      <td style="padding-left:0px">
+        
+        <table>
+          <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
+          <tr>
+            <td style="border:none">
+              <div class="clearfix <%= check_error(@error_message_instance) %>">
+                <div class="input">
+                  <input class="xlarge <%= check_error(@error_message_instance) %>" id="instance" name="instance" maxlength="1" type="instance" value="<%= @app_detail["instance_count"] %>" />
+                  <span class="help-inline"><%= @error_message_instance %></span>
+                </div>
+              </div>
+            </td>
+            <td style="text-align:right; border:none">
+              <button class="btn primary">change</button>
+            </td>
+          </tr>
+          <% end %>
+        
+        </table>
+        
+      </td>
+    </tr>
+    <tr>
+      <th class="blue header">version</th>
+      <td><%= @app_detail["version"] %></td>
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -17,7 +17,7 @@ Raspberry::Application.routes.draw do
 
   controller :repository do
     match 'repository', :to => :index
-    match 'generalinfo', :to => :show_info
+    match 'applicationdetail', :to => :detail
   end
 
   # The priority is based upon order of creation:

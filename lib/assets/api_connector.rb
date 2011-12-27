@@ -10,9 +10,9 @@ module ApiConnector
     #def delete()
       # delete
     #end
-    def get(api_name, body=nil)
+    def get(api_name, key="", query=nil, body=nil)
       header = [['content-type', 'application/json'], ['Accept', 'application/json']]
-      request( :get, api_name, body, header)
+      request( :get, api_name, key, query, body, header)
     end
     #def put()
       # put
@@ -20,12 +20,12 @@ module ApiConnector
     def post(api_name, body=nil)
       # post
       header = [['content-type', 'application/json'], ['Accept', 'application/json']]
-      request( :post, api_name, body, header)
+      request( :post, api_name, "", nil, body, header)
     end
-    def request(method, api_name, body=nil, header=nil)
+    def request(method, api_name, key="", query=nil, body=nil, header=nil)
       #post    = url     body   header
       #request = method  url    query  body  header  follow_redirect
-      @client.request( method, @url + api_name + "/", nil, body, header, nil)
+      @client.request( method, @url + api_name + "/" + key, query, body, header, nil)
     end
   end
 end

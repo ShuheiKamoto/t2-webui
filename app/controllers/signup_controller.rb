@@ -6,48 +6,45 @@ class SignupController < ApplicationController
   end
 
   def save
+    @view_status = ViewStatus::Status.new()
     begin
       @error_count = 0
-      @request_status = {"status"=>"error", "message"=>""}
-      @error_message_email = ""
-      @error_message_password = ""
-      @error_message_confirmpassword = ""
-      if params[:password] != params[:confirmpassword]
-        @error_message_confirmpassword += "Mismatch"
-        @error_count += 1
-      end
-      if params[:email].blank?
-        @error_message_email += "Required"
-        @error_count += 1
-      end
-      if params[:password].blank?
-        @error_message_password += "Required"
-        @error_count += 1
-      end
-      if params[:confirmpassword].blank?
-        @error_message_confirmpassword += "Required"
-        @error_count += 1
-      end
-      
+      save_validator
       if @error_count > 0
         raise "Please correct the error and then retry"
       else
         postdata = '{"email":"' + params[:email] + '","password":"' + params[:password] + '"}'
         con = ApiConnector::Connect.new()
-        res = con.post("users", postdata)
-        p "*-*-*-*-*-*-status"
-        p res.status
-        p res.body
-        
-        @request_status['status'] = "success"
-        @request_status['message'] = "Registration Success! Please enjoy after login."
+        @view_status.http_message({"200"=>"Registration Success! Please enjoy after login."})
+        @view_status.select_message(con.post("users", postdata))
       end
-    rescue HTTPClient::BadResponseError => e
-      @request_status['message'] = "Failed to register. Please try again..."
-    rescue RuntimeError => e
-      @request_status['message'] = e.message
+    rescue => e
+      @view_status.status = @view_status.error
+      @view_status.message = e.message
     ensure
       render :action => 'index'
+    end
+  end
+  
+  def save_validator
+    @error_message_email = ""
+    @error_message_password = ""
+    @error_message_confirmpassword = ""
+    if params[:password] != params[:confirmpassword]
+      @error_message_confirmpassword += "Mismatch"
+      @error_count += 1
+    end
+    if params[:email].blank?
+      @error_message_email += "Required"
+      @error_count += 1
+    end
+    if params[:password].blank?
+      @error_message_password += "Required"
+      @error_count += 1
+    end
+    if params[:confirmpassword].blank?
+      @error_message_confirmpassword += "Required"
+      @error_count += 1
     end
   end
 end
