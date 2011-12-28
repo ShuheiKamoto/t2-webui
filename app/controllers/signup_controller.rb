@@ -10,11 +10,13 @@ class SignupController < ApplicationController
     begin
       @error_count = 0
       save_validator
+      # サインアップに必要な情報があるかのチェックを行い、エラーが1つでもあればエラーとする。
       if @error_count > 0
         raise "Please correct the error and then retry"
       else
         postdata = '{"email":"' + params[:email] + '","password":"' + params[:password] + '"}'
         con = ApiConnector::Connect.new()
+        # APIとの通信に成功した場合のメッセージを設定
         @view_status.http_message({"200"=>"Registration Success! Please enjoy after login."})
         @view_status.select_message(con.post("users", postdata))
       end
@@ -27,6 +29,7 @@ class SignupController < ApplicationController
   end
   
   def save_validator
+    # サインアップに必要な情報があるかのチェック
     @error_message_email = ""
     @error_message_password = ""
     @error_message_confirmpassword = ""

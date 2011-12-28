@@ -13,6 +13,27 @@ module ViewStatus
     #attr_writer :display
     def display(view)
       if view.class == Hash
+        # 2xxが指定された場合は、200番台のステータスに同じdisplayフラグを設定する
+        if view.key?('2xx')
+          value = view['2xx']
+          view['200']=value
+          view['202']=value
+          view['204']=value
+          view.delete('2xx')
+        end
+        if view.key?('3xx')
+          value = view['3xx']
+          view['304']=value
+          view.delete('3xx')
+        end
+        if view.key?('4xx')
+          value = view['4xx']
+          view['400']=value
+          view['401']=value
+          view['403']=value
+          view['404']=value
+          view.delete('4xx')
+        end
         @display = @display.merge(view)
       end
     end
@@ -20,6 +41,27 @@ module ViewStatus
     #attr_writer :http_message
     def http_message(new_message)
       if new_message.class == Hash
+        # 2xxが指定された場合は、200番台のステータスに同じメッセージを設定する
+        if new_message.key?('2xx')
+          value = new_message['2xx']
+          new_message['200']=value
+          new_message['202']=value
+          new_message['204']=value
+          new_message.delete('2xx')
+        end
+        if new_message.key?('3xx')
+          value = new_message['3xx']
+          new_message['304']=value
+          new_message.delete('3xx')
+        end
+        if new_message.key?('4xx')
+          value = new_message['4xx']
+          new_message['400']=value
+          new_message['401']=value
+          new_message['403']=value
+          new_message['404']=value
+          new_message.delete('4xx')
+        end
         @http_message = @http_message.merge(new_message)
       end
     end

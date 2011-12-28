@@ -5,16 +5,12 @@
   <table id="myapps" class="zebra-striped">
     <tbody>
     <tr>
-      <th class="blue header">application ID</th>
-      <td><%= @app_detail["id"] %></td>
-    </tr>
-    <tr>
       <th class="blue header">URL</th>
       <td><%= @app_detail["url"] %></td>
     </tr>
     <tr>
       <th class="blue header">git address</th>
-      <td><%= @app_detail["git_address"] %></td>
+      <td><%= @app_detail["git_repository"] %></td>
     </tr>
     <tr>
       <th class="blue header">datasource</th>
@@ -34,19 +30,17 @@
             <td style="border:none">
               <%= col['email'] %>
             </td>
-            <td style="text-align:left; border:none">
+            <td style="border:none">
               <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
-                <div class="input" style="margin:0px">
-                  <%= select_tag('mod_role' , options_for_select([["R","R"],["W","W"],["RW","RW"]], col['role']), { :class => 'small' }) %>
-                  <button class="btn success">U</button>
-                </div>
+                <%= select_tag('mod_role' , options_for_select([["R","R"],["RW","RW"]], col['role']), { :class => 'small' }) %>
+                <button class="btn success">U</button>
                 <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
                 <input type="hidden" name="mode" value="mod_collaborator_role">
                 <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
                 <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
                 <input type="hidden" name="instance_count" value="<%= @app_detail["instance_count"] %>">
                 <input type="hidden" name="collaborators" value="<%= @app_detail["collaborators"].to_json %>">
-                <input type="hidden" name="modcoll" value="<%= col['email'] %>">
+                <input type="hidden" name="mod_collaborator" value="<%= col['email'] %>">
               <% end %>
             </td>
             <td style="text-align:right; border:none">
@@ -64,24 +58,19 @@
           </tr>
           
           <% end %>
-          <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
           <tr>
             <td style="border:none">
-              <div class="clearfix <%= check_error(@error_message_email) %>">
-                <div class="input">
-                  <input class="xlarge <%= check_error(@error_message_email) %>" id="new_col" name="new_col" maxlength="30" type="email" placeholder="Email" value="<%= params[:email] %>" />
-                  <span class="help-inline"><%= @error_message_email %></span>
-                </div>
+              <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
+              <div class="clearfix <%= check_error(@error_message_new_col_email) %>">
+                <input class="xlarge <%= check_error(@error_message_new_col_email) %>" id="new_col" name="new_col" maxlength="30" type="email" placeholder="Email" value="<%= params[:email] %>" />
+                <span class="help-inline"><%= @error_message_new_col_email %></span>
               </div>
             </td>
             <td style="border:none">
-              <div class="input">
-                <select id="new_role" name="new_role" class="small">
-                  <option>R</option>
-                  <option>W</option>
-                  <option>RW</option>
-                </select>
-              </div>
+              <select id="new_role" name="new_role" class="small">
+                <option>R</option>
+                <option>RW</option>
+              </select>
             </td>
             <td style="text-align:right; border:none">
               <button class="btn primary">＋</button>
@@ -103,14 +92,12 @@
       <td style="padding-left:0px">
         
         <table>
-          <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
           <tr>
             <td style="border:none">
+              <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
               <div class="clearfix <%= check_error(@error_message_instance) %>">
-                <div class="input">
-                  <input class="xlarge <%= check_error(@error_message_instance) %>" id="instance" name="instance" maxlength="1" type="instance" value="<%= @app_detail["instance_count"] %>" />
-                  <span class="help-inline"><%= @error_message_instance %></span>
-                </div>
+                <input class="xlarge <%= check_error(@error_message_instance) %>" id="instance" name="instance" maxlength="2" type="instance" value="<%= @app_detail["instance_count"] %>" />
+                <span class="help-inline"><%= @error_message_instance %></span>
               </div>
             </td>
             <td style="text-align:right; border:none">
@@ -121,7 +108,6 @@
           <input type="hidden" name="mode" value="mod_instance">
           <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
           <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
-          <input type="hidden" name="instance_count" value="<%= @app_detail["instance_count"] %>">
           <input type="hidden" name="collaborators" value="<%= @app_detail["collaborators"].to_json %>">
           <% end %>
         
@@ -132,6 +118,15 @@
     <tr>
       <th class="blue header">version</th>
       <td><%= @app_detail["version"] %></td>
+    </tr>
+    <tr>
+      <th class="blue header">history</th>
+      <td>
+        <%= form_tag({:action => 'history'}, {:method => "post"}) do %>
+          <input type="hidden" name="appid" value="@app_detail["id"]">
+          <button class="btn info">view history list</button>
+        <% end %>
+      </td>
     </tr>
     </tbody>
   </table>

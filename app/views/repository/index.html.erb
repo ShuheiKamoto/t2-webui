@@ -18,6 +18,7 @@
         <tr>
           <th class="blue header">Application Name</th>
           <th class="blue header">Application Detail</th>
+          <th class="blue header">Application WARfile</th>
         </tr>
       </thead>
       <tbody>
@@ -28,6 +29,12 @@
             <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
               <input type="hidden" name="appid" value="<%= app['id'] %>">
               <button class="btn info">Detail</button>
+            <% end %>
+          </td>
+          <td>
+            <%= form_tag({:action => 'upload'}, {:method => "post"}) do %>
+              <input type="hidden" name="appid" value="<%= app['id'] %>">
+              <button class="btn info">Upload</button>
             <% end %>
           </td>
         </tr>
