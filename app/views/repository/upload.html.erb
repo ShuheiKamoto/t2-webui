@@ -1,17 +1,16 @@
 <div class="hero-unit">
   <div class="alert-message block-message info">
-    <p style="font-size: xx-large;width:400px;"><strong>Application upload</strong></p>
+    <p style="font-size: xx-large;width:600px;"><strong>Application upload to "<%= @app_name %>"</strong></p>
   </div>
-  <%= form_tag({:action => 'upload'}, {:method => "post"}) do %>
+  <%= form_tag({:action=>'upload'},{:multipart=>true}) do %>
     <div class="clearfix">
-      <label for="fileInput">Application Name</label>
-      <div class="input">
-        <input id="fileInput" class="input-file" type="file" name="fileInput">
-      </div>
+      <label for="fileInput">Application </label>
+      <%= file_field "warFile", "warFile" %>
     </div>
     <div class="actions">
       <input type="submit" class="btn primary" value="Upload">&nbsp;
-      <br>
     </div>
+    <input type="hidden" name="mode" value="execute">
+    <input type="hidden" name="appname" value="<%= @app_name %>">
   <% end %>
 </div>

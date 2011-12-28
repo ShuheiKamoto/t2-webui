@@ -34,6 +34,7 @@
           <td>
             <%= form_tag({:action => 'upload'}, {:method => "post"}) do %>
               <input type="hidden" name="appid" value="<%= app['id'] %>">
+              <input type="hidden" name="appname" value="<%= app['name'] %>">
               <button class="btn info">Upload</button>
             <% end %>
           </td>

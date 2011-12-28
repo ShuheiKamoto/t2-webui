@@ -12,6 +12,9 @@ module ApiConnector
     #end
     def get(api_name, key="", query=nil, body=nil)
       header = [['content-type', 'application/json'], ['Accept', 'application/json']]
+      if key != ""
+        key = "/" + key
+      end
       request( :get, api_name, key, query, body, header)
     end
     def put(api_name, body=nil)
@@ -24,10 +27,15 @@ module ApiConnector
       header = [['content-type', 'application/json'], ['Accept', 'application/json']]
       request( :post, api_name, "", nil, body, header)
     end
+    def file(api_name, body=nil)
+      # file
+      header = [['content-type', 'multipart/form-data']]
+      request( :post, api_name, "", nil, body, header)
+    end
     def request(method, api_name, key="", query=nil, body=nil, header=nil)
       #post    = url     body   header
       #request = method  url    query  body  header  follow_redirect
-      @client.request( method, @url + api_name + "/" + key, query, body, header, nil)
+      @client.request( method, @url + api_name + key, query, body, header, nil)
     end
   end
 end

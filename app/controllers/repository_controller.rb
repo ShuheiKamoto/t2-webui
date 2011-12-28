@@ -144,7 +144,37 @@ class RepositoryController < ApplicationController
   end
   
   def upload
-    
+    @app_name = params['appname']
+    if params[:mode] == "execute"
+      @view_status = ViewStatus::Status.new()
+      begin
+        # ファイル名が未入力のとき
+        if params[:warFile].blank?
+          raise "input war file path!!"
+        else
+          # アップロードされたファイルを取得する
+          file = params[:warFile]['warFile']
+          filename = file.original_filename
+          postdata = ""
+          # ファイルがある場合
+          if filename != "" then
+            con = ApiConnector::Connect.new()
+            # APIとの通信で成功したときのメッセージを設定
+            @view_status.http_message({"200"=>"Uploading Warfile Succeeded!"})
+            # APIへファイルを転送する
+            postdata = [{ 'Content-Disposition' => 'form-data; name="warFile"; filename="' + filename + '"' ,
+                          'Content-Type' => 'application/octet-stream', :content => file.read }, 
+                          { 'Content-Disposition' => 'form-data; name="name"', :content => @app_name}]
+            @view_status.select_message(con.file("warfiles", postdata))
+          end
+        end
+        redirect_to :controller => "home", :action => "index"
+      rescue => e
+        @view_status.status = @view_status.error
+        @view_status.message = e.message
+      end
+      
+    end
   end
   
   def history
