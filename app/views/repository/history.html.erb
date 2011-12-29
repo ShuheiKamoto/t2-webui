@@ -1,6 +1,18 @@
 <div class="hero-unit">
   <div class="alert-message block-message info">
-    <p style="font-size: xx-large;width:400px;"><strong>Application history</strong></p>
+    <table>
+      <tr>
+        <td style="border:none">
+          <p style="font-size: xx-large;width:600px;"><strong>Application history "<%= @app_name %>"</strong></p>
+        </td>
+        <td style="border:none">
+          <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
+            <input type="hidden" name="appid" value="<%= @app_id %>">
+            <button class="btn primary">back to Detail</button>
+          <% end %>
+        </td>
+      </tr>
+    </table>
   </div>
   <table id="history" class="zebra-striped">
     <thead>
@@ -10,14 +22,16 @@
       </tr>
     </thead>
     <tbody>
+      <% @disp_warfiles.each do |warfile| %>
       <tr>
         <td style="border:none">
-          1.0
+          <%= warfile['version'] %>
         </td>
         <td style="border:none">
-          2011/12/27
+          <%= warfile['date'] %>
         </td>
       </tr>
+      <% end %>
     </tbody>
   </table>
 </div>

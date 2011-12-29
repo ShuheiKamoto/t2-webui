@@ -178,6 +178,27 @@ class RepositoryController < ApplicationController
   end
   
   def history
-    
+    @app_id = params[:appid]
+    @app_name = params[:appname]
+    @view_status = ViewStatus::Status.new()
+    begin
+      con = ApiConnector::Connect.new()
+      res = con.get("warfiles","");
+      if res.status >= 400
+        raise @view_status.message
+      end
+      warfiles = JSON.parse(res.body)
+      @disp_warfiles = []
+      warfiles['warFiles'].each do |war|
+        if war['appName'] == @app_name then
+          date_format = "%Y/%m/%d %X"
+          @disp_warfiles << {"version" => war['fileId'],
+                             "date" => Time.at(war['registDt'] / 1000).strftime(date_format)}
+        end
+      end
+    rescue => e
+      @view_status.status = @view_status.error
+      @view_status.message = e.message
+    end
   end
 end

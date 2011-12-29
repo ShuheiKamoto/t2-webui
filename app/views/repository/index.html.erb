@@ -28,14 +28,14 @@
           <td>
             <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
               <input type="hidden" name="appid" value="<%= app['id'] %>">
-              <button class="btn info">Detail</button>
+              <input type="submit" class="btn info" value="Detail">
             <% end %>
           </td>
           <td>
             <%= form_tag({:action => 'upload'}, {:method => "post"}) do %>
               <input type="hidden" name="appid" value="<%= app['id'] %>">
               <input type="hidden" name="appname" value="<%= app['name'] %>">
-              <button class="btn info">Upload</button>
+              <input type="submit" class="btn info" value="Upload">
             <% end %>
           </td>
         </tr>

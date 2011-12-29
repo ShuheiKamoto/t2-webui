@@ -33,7 +33,7 @@
             <td style="border:none">
               <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
                 <%= select_tag('mod_role' , options_for_select([["R","R"],["RW","RW"]], col['role']), { :class => 'small' }) %>
-                <button class="btn success">U</button>
+                <input type="submit" class="btn success" value="U">
                 <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
                 <input type="hidden" name="mode" value="mod_collaborator_role">
                 <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
@@ -45,7 +45,7 @@
             </td>
             <td style="text-align:right; border:none">
               <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
-                <button class="btn error">×</button>
+                <input type="submit" class="btn error" value="×">
                 <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
                 <input type="hidden" name="mode" value="del_collaborator">
                 <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
@@ -73,7 +73,7 @@
               </select>
             </td>
             <td style="text-align:right; border:none">
-              <button class="btn primary">＋</button>
+              <input type="submit" class="btn primary" value="＋">
             </td>
           </tr>
             <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
@@ -101,7 +101,7 @@
               </div>
             </td>
             <td style="text-align:right; border:none">
-              <button class="btn success">U</button>
+              <input type="submit" class="btn success" value="U">
             </td>
           </tr>
           <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
@@ -123,7 +123,8 @@
       <th class="blue header">history</th>
       <td>
         <%= form_tag({:action => 'history'}, {:method => "post"}) do %>
-          <input type="hidden" name="appid" value="@app_detail["id"]">
+          <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
+          <input type="hidden" name="appname" value="<%= @app_detail["name"] %>">
           <button class="btn info">view history list</button>
         <% end %>
       </td>
