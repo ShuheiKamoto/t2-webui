@@ -19,7 +19,7 @@
   <div class="clearfix  <%= check_error(@error_message_confirmpassword) %>">
     <label>confirm password</label>
     <div class="input">
-      <input class="xlarge  <%= check_error(@error_message_confirmpassword) %>" id="confirmpassword" name="confirmpassword" size="30" type="password" />
+      <input class="xlarge  <%= check_error(@error_message_confirmpassword) %>" id="confirmpassword" name="confirmpassword" maxlength="30" type="password" placeholder="Confirm Password" />
       <span class="help-inline"><%= @error_message_confirmpassword %></span>
     </div>
   </div>

@@ -1,3 +1,5 @@
+<script src="./jquery-1.7.1.min.js"></script>
+<script src="./jquery.tablesorter.min.js"></script>
 <div class="hero-unit">
   <div class="alert-message block-message info">
     <table>
@@ -35,3 +37,8 @@
     </tbody>
   </table>
 </div>
+<script>
+$(function() {
+$("table#history").tablesorter();
+});
+</script>

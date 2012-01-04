@@ -1,7 +1,9 @@
 Raspberry::Application.routes.draw do
   
-  get "repository/index"
+  get "account/index"
 
+  get "repository/index"
+  
   root :to => 'home#index'
   
   controller :home do
@@ -21,6 +23,14 @@ Raspberry::Application.routes.draw do
     match 'applicationcreate', :to => :create
     match 'applicationupload', :to => :upload
     match 'applicationhistory', :to => :history
+  end
+  
+  controller :account do
+    match 'account', :to => :index
+    match 'passchange', :to => :password_change
+    match 'addaplication', :to => :add_application
+    match 'deleteaplication', :to => :delete_application
+    match 'updateapplicationkey', :to => :update_application_key
   end
 
   # The priority is based upon order of creation:

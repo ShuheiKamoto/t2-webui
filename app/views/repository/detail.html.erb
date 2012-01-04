@@ -2,26 +2,26 @@
   <p style="font-size: xx-large;width:400px;"><strong><%= @app_detail["name"] %></strong></p>
 </div>
 <div class="hero-unit">
-  <table id="myapps" class="zebra-striped">
+  <table id="myapps">
     <tbody>
     <tr>
-      <th class="blue header">URL</th>
+      <th class="blue">URL</th>
       <td><%= @app_detail["url"] %></td>
     </tr>
     <tr>
-      <th class="blue header">git address</th>
+      <th class="blue">git address</th>
       <td><%= @app_detail["git_repository"] %></td>
     </tr>
     <tr>
-      <th class="blue header">datasource</th>
+      <th class="blue">datasource</th>
       <td><%= @app_detail["datasource"] %></td>
     </tr>
     <tr>
-      <th class="blue header">owner</th>
+      <th class="blue">owner</th>
       <td><%= @app_detail["owner"] %></td>
     </tr>
     <tr>
-      <th class="blue header">collaborators</th>
+      <th class="blue">collaborators</th>
       <td style="padding-left:0px">
         <table>
           <% @app_detail["collaborators"].each do |col| %>
@@ -88,7 +88,7 @@
       </td>
     </tr>
     <tr>
-      <th class="blue header">instance count</th>
+      <th class="blue">instance count</th>
       <td style="padding-left:0px">
         
         <table>
@@ -116,11 +116,11 @@
       </td>
     </tr>
     <tr>
-      <th class="blue header">version</th>
+      <th class="blue">version</th>
       <td><%= @app_detail["version"] %></td>
     </tr>
     <tr>
-      <th class="blue header">history</th>
+      <th class="blue">history</th>
       <td>
         <%= form_tag({:action => 'history'}, {:method => "post"}) do %>
           <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">

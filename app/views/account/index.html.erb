@@ -1,0 +1,90 @@
+<div class="alert-message block-message info">
+  <p style="font-size: xx-large;width:400px;"><strong><%= session[:email] %></strong></p>
+</div>
+<div class="hero-unit">
+  <table id="account">
+    <tbody>
+    <tr>
+      <th class="blue">Change Password</th>
+      <td>
+        <%= form_tag({:action => 'password_change'}, {:method => "post", :class => "form-stacked"}) do %>
+        <div class="clearfix <%= check_error(@error_message_current_password) %>">
+          <label class="blue">Current Password</label>
+          <div class="input">
+            <input class="xlarge <%= check_error(@error_message_current_password) %>" id="currentpassword" name="currentpassword" maxlength="30" type="password" placeholder="Current Password" />
+            <span class="help-inline"><%= @error_message_current_password %></span>
+          </div>
+        </div>
+        <div class="clearfix <%= check_error(@error_message_newpassword) %>">
+          <label class="blue">New password</label>
+          <div class="input">
+            <input class="xlarge <%= check_error(@error_message_newpassword) %>" id="newpassword" name="newpassword" maxlength="30" type="password" placeholder="New Password" />
+            <span class="help-inline"><%= @error_message_newpassword %></span>
+          </div>
+        </div>
+        <div class="clearfix  <%= check_error(@error_message_confirmpassword) %>">
+          <label class="blue">Confirm New password</label>
+          <div class="input">
+            <input class="xlarge  <%= check_error(@error_message_confirmpassword) %>" id="confirmpassword" name="confirmpassword" maxlength="30" type="password" placeholder="Confirm New Password" />
+            <span class="help-inline"><%= @error_message_confirmpassword %></span>
+          </div>
+        </div>
+        <input type="submit" class="btn success" value="U">
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th class="blue">xAuth Applications</th>
+      <td style="padding-left:0px">
+      
+        <div class="alert-message block-message info">
+        <table>
+          <tr>
+            <td style="border:none">
+              <dl>
+                <dt class="blue">application name</dt>
+                <dd>application</dd>
+                <dt class="blue">Consumer KEY</dt>
+                <dd>key</dd>
+                <dt class="blue">Consumer Secret</dt>
+                <dd>secret</dd>
+              </dl>
+            </td>
+            <td style="text-align:right; border:none">
+              <%= form_tag({:action => 'delete_application'}, {:method => "post"}) do %>
+                <input type="submit" class="btn error" value="×">
+                <input type="hidden" name="appid" value="hidd">
+              <% end %>
+              <%= form_tag({:action => 'update_application_key'}, {:method => "post"}) do %>
+                <input type="submit" class="btn success" value="U">
+                <input type="hidden" name="appid" value="hidd">
+              <% end %>
+            </td>
+          </tr>
+        </table>
+        </div>
+         
+        <div class="alert-message block-message info">
+        <table>
+          <tr>
+            <td style="border:none">
+              <%= form_tag({:action => 'add_application'}, {:method => "post"}) do %>
+              <div class="clearfix <%= check_error(@error_message_new_app_name) %>">
+                <input class="xlarge <%= check_error(@error_message_new_app_name) %>" id="new_application_name" name="new_application_name" maxlength="30" type="text" placeholder="New Application Name" />
+                <span class="help-inline"><%= @error_message_new_app_name %></span>
+              </div>
+            </td>
+            <td style="text-align:right; border:none">
+              <input type="submit" class="btn primary" value="＋">
+            </td>
+          </tr>
+            <input type="hidden" name="appid" value="hidd">
+          <% end %>
+        </table>
+        </div>
+      
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

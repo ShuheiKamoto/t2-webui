@@ -1,29 +1,41 @@
+<script src="./jquery-1.7.1.min.js"></script>
+<script src="./bootstrap-dropdown.js"></script>
+
 <% if (!@view_status.blank?) && (@view_status.class == ViewStatus::Status) && (@view_status.status != @view_status.none) %>
   <div class='alert-message <%= @view_status.status %>'>
     <%= @view_status.message %>
   </div>
 <% end %>
-<div class="topbar">
-  <div class="fill">
-    <div class="container">
-      <a class="brand" href="/"><img src="logo.png" width="207px" height="38px"  /></a>
-      <ul class="nav">
-        <li class="active"><a href="/home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <% if session[:auth_key] %>
-        <%= form_tag({:controller => "home", :action => 'signout'}, {:method => "post", :class=>"pull-right"}) do %>
-          <span class="label notice"><%= session[:email] %></span>
-          <button class="btn" type="submit">Sign out</button>
+<div style="z-index: 5;" class="topbar-wrapper">
+  <div data-dropdown="dropdown" class="topbar">
+    <div class="topbar-inner">
+      <div class="container">
+        <a class="brand" href="/"><img src="logo.png" width="207px" height="38px"  /></a>
+        <ul class="nav">
+          <li class="active"><a href="/home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <% if session[:auth_key] %>
+          <ul class="nav secondary-nav">
+            <li class="menu">
+              <a class="menu" href="#"><span class="label notice"><%= session[:email] %></span></a>
+              <ul class="menu-dropdown">
+                <li><a href="/home">Apps</a></li>
+                <li><a href="/account">Account</a></li>
+                <li class="divider"></li>
+                <li><a href="/signout">Sign out</a></li>
+              </ul>
+            </li>
+          </ul>
+        <% else %>
+          <%= form_tag({:controller => "home", :action => 'authorize'}, {:method => "post", :class=>"pull-right"}) do %>
+            <input class="input-small" type="email" placeholder="Email" id="email" name="email" maxlength="30">
+            <input class="input-small" type="password" placeholder="Password" id="password" name="password" maxlength="30">
+            <button class="btn" type="submit">Sign in</button>
+          <% end %>
         <% end %>
-      <% else %>
-        <%= form_tag({:controller => "home", :action => 'authorize'}, {:method => "post", :class=>"pull-right"}) do %>
-          <input class="input-small" type="email" placeholder="Email" id="email" name="email" maxlength="30">
-          <input class="input-small" type="password" placeholder="Password" id="password" name="password" maxlength="30">
-          <button class="btn" type="submit">Sign in</button>
-        <% end %>
-      <% end %>
+      </div>
     </div>
   </div>
 </div>
