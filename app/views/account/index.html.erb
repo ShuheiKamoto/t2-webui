@@ -36,34 +36,35 @@
     <tr>
       <th class="blue">xAuth Applications</th>
       <td style="padding-left:0px">
-      
+      <% @consumer_key_list.each do |consumer_key| %>
         <div class="alert-message block-message info">
         <table>
           <tr>
             <td style="border:none">
               <dl>
                 <dt class="blue">application name</dt>
-                <dd>application</dd>
+                <dd><%= consumer_key['userSideAppName'] %></dd>
                 <dt class="blue">Consumer KEY</dt>
-                <dd>key</dd>
+                <dd><%= consumer_key['consumerKey'] %></dd>
                 <dt class="blue">Consumer Secret</dt>
-                <dd>secret</dd>
+                <dd><%= consumer_key['consumerSecret'] %></dd>
               </dl>
             </td>
             <td style="text-align:right; border:none">
               <%= form_tag({:action => 'delete_application'}, {:method => "post"}) do %>
                 <input type="submit" class="btn error" value="×">
-                <input type="hidden" name="appid" value="hidd">
+                <input type="hidden" name="appid" value="<%= consumer_key['userSideAppId'] %>">
               <% end %>
               <%= form_tag({:action => 'update_application_key'}, {:method => "post"}) do %>
                 <input type="submit" class="btn success" value="U">
-                <input type="hidden" name="appid" value="hidd">
+                <input type="hidden" name="appid" value="<%= consumer_key['userSideAppId'] %>">
+                <input type="hidden" name="appname" value="<%= consumer_key['userSideAppName'] %>">
               <% end %>
             </td>
           </tr>
         </table>
         </div>
-         
+        <% end %>
         <div class="alert-message block-message info">
         <table>
           <tr>

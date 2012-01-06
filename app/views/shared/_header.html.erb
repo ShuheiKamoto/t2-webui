@@ -19,7 +19,7 @@
         <% if session[:auth_key] %>
           <ul class="nav secondary-nav">
             <li class="menu">
-              <a class="menu" href="#"><span class="label notice"><%= session[:email] %></span></a>
+              <a class="menu" href="#"><span class="label notice" style="text-transform: none;"><%= session[:email] %></span></a>
               <ul class="menu-dropdown">
                 <li><a href="/home">Apps</a></li>
                 <li><a href="/account">Account</a></li>

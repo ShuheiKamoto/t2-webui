@@ -14,7 +14,7 @@
     </tr>
     <tr>
       <th class="blue">datasource</th>
-      <td><%= @app_detail["datasource"] %></td>
+      <td>jdbc/<%= @app_detail["datasource"] %></td>
     </tr>
     <tr>
       <th class="blue">owner</th>
@@ -31,11 +31,10 @@
               <%= col['email'] %>
             </td>
             <td style="border:none">
-              <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
+              <%= form_tag({:action => 'mod_collaborator_role'}, {:method => "post"}) do %>
                 <%= select_tag('mod_role' , options_for_select([["R","R"],["RW","RW"]], col['role']), { :class => 'small' }) %>
                 <input type="submit" class="btn success" value="U">
                 <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
-                <input type="hidden" name="mode" value="mod_collaborator_role">
                 <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
                 <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
                 <input type="hidden" name="instance_count" value="<%= @app_detail["instance_count"] %>">
@@ -44,10 +43,9 @@
               <% end %>
             </td>
             <td style="text-align:right; border:none">
-              <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
+              <%= form_tag({:action => 'del_collaborator'}, {:method => "post"}) do %>
                 <input type="submit" class="btn error" value="×">
                 <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
-                <input type="hidden" name="mode" value="del_collaborator">
                 <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
                 <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
                 <input type="hidden" name="instance_count" value="<%= @app_detail["instance_count"] %>">
@@ -60,7 +58,7 @@
           <% end %>
           <tr>
             <td style="border:none">
-              <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
+              <%= form_tag({:action => 'add_collaborator'}, {:method => "post"}) do %>
               <div class="clearfix <%= check_error(@error_message_new_col_email) %>">
                 <input class="xlarge <%= check_error(@error_message_new_col_email) %>" id="new_col" name="new_col" maxlength="30" type="email" placeholder="Email" value="<%= params[:email] %>" />
                 <span class="help-inline"><%= @error_message_new_col_email %></span>
@@ -77,7 +75,6 @@
             </td>
           </tr>
             <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
-            <input type="hidden" name="mode" value="add_collaborator">
             <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
             <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
             <input type="hidden" name="instance_count" value="<%= @app_detail["instance_count"] %>">
@@ -94,7 +91,7 @@
         <table>
           <tr>
             <td style="border:none">
-              <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
+              <%= form_tag({:action => 'mod_instance'}, {:method => "post"}) do %>
               <div class="clearfix <%= check_error(@error_message_instance) %>">
                 <input class="xlarge <%= check_error(@error_message_instance) %>" id="instance" name="instance" maxlength="2" type="instance" value="<%= @app_detail["instance_count"] %>" />
                 <span class="help-inline"><%= @error_message_instance %></span>
@@ -105,7 +102,6 @@
             </td>
           </tr>
           <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
-          <input type="hidden" name="mode" value="mod_instance">
           <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
           <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
           <input type="hidden" name="collaborators" value="<%= @app_detail["collaborators"].to_json %>">

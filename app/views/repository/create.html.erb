@@ -2,7 +2,7 @@
   <div class="alert-message block-message info">
     <p style="font-size: xx-large;width:400px;"><strong>Application create</strong></p>
   </div>
-  <%= form_tag({:action => 'create'}, {:method => "post"}) do %>
+  <%= form_tag({:action => 'create_save'}, {:method => "post"}) do %>
     <div class="clearfix <%= check_error(@error_message_email) %>">
       <label>Application Name</label>
       <div class="input">
@@ -14,6 +14,5 @@
       <input type="submit" class="btn primary" value="Create">&nbsp;
       <br>
     </div>
-    <input type="hidden" name="mode" value="execute">
   <% end %>
 </div>

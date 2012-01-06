@@ -1,15 +1,17 @@
 class RepositoryController < ApplicationController
   def index
+    @view_status = ViewStatus::Status.new()
+    @view_status.display({"200"=>false})
+    application_list @view_status
+  end
+
+  def application_list view_status, through_messege=false
     @app_list = []
     begin
-      @view_status = ViewStatus::Status.new()
       con = ApiConnector::Connect.new()
       res = con.get("apps")
-      # APIとの通信が成功しても画面にメッセージを表示しない
-      @view_status.display({"200"=>false})
-      @view_status.select_message(res)
-      if res.status >= 400
-        raise @view_status.message
+      if !through_messege
+        view_status.select_message(res)
       end
       # アプリケーション一覧の取得
       apps = JSON.parse(res.body)
@@ -19,8 +21,8 @@ class RepositoryController < ApplicationController
         end
       end
     rescue => e
-      @view_status.status = @view_status.error
-      @view_status.message = e.message
+      view_status.status = view_status.error
+      view_status.message = e.message
     end
   end
 
@@ -38,66 +40,89 @@ class RepositoryController < ApplicationController
   end
 
   def detail
+    @view_status = ViewStatus::Status.new()
+    # APIとの通信が成功しても画面にメッセージを表示しない
+    @view_status.display({"200"=>false})
+    show_detail @view_status
+  end
+
+  def mod_collaborator_role
+    @view_status = ViewStatus::Status.new()
     begin
-      @view_status = ViewStatus::Status.new()
-      # アプリケーション詳細画面が開かれたときにAPIとの通信が成功してもメッセージは出さない。
-      if params['mode'].blank?
-        @view_status.display({"200"=>false})
-      end
-      # モードで各処理の振り分け
-      case params['mode']
-      # コラボレータのロール変更処理
-      when "mod_collaborator_role"
-        collaborators = JSON.parse(params[:collaborators])
-        collaborators.each do |col|
-          if col['email']==params['mod_collaborator']
-            col['role']=params['mod_role']
-          end
+      collaborators = JSON.parse(params[:collaborators])
+      collaborators.each do |col|
+        if col['email']==params['mod_collaborator']
+          col['role']=params['mod_role']
         end
-        # 成功時・失敗時のメッセージを設定
-        message = {"2xx"=>"Succeeded in changing the rules!", "4xx"=>"Error in changing the rules!"}
-        # 更新処理
-        detail_update(@view_status, message, params[:appid], params[:name], {"email"=>params[:owner]}, params[:instance_count], params[:instance_count], collaborators)
-      # コラボレータの削除処理
-      when "del_collaborator"
-        collaborators = JSON.parse(params[:collaborators]).reject! {|col| col['email'] == params[:del_collaborator]}
-        message = {"2xx"=>"Succeeded in delete the collaborator!", "4xx"=>"Error in delete the collaborator!"}
-        detail_update(@view_status, message, params[:appid], params[:name], {"email"=>params[:owner]}, params[:instance_count], params[:instance_count], collaborators)
-      # コラボレータ追加処理
-      when "add_collaborator"
-        # コラボレータのIDが入力されていないときはエラー
-        if params['new_col'].blank?
-          @error_message_new_col_email = "Required"
-          raise "Required Error"
-        end
-        collaborators = JSON.parse(params[:collaborators]) << {"email"=>params['new_col'],"role"=>params['new_role']}
-        message = {"2xx"=>"Succeeded in add the collaborator!", "4xx"=>"Error in add the collaborator!"}
-        detail_update(@view_status, message, params[:appid], params[:name], {"email"=>params[:owner]}, params[:instance_count], params[:instance_count], collaborators)
-      # インスタンス数の変更処理
-      when "mod_instance"
-        message = {"2xx"=>"Succeeded in changing the instance!", "4xx"=>"Error in changing the instance!"}
-        detail_update(@view_status, message, params[:appid], params[:name], {"email"=>params[:owner]}, params[:instance], params[:instance], JSON.parse(params[:collaborators]))
       end
+      # 成功時・失敗時のメッセージを設定
+      message = {"2xx"=>"Succeeded in changing the rules!", "4xx"=>"Error in changing the rules!"}
+      # 更新処理
+      detail_update(@view_status, message, params[:appid], params[:name], {"email"=>params[:owner]}, params[:instance_count], params[:instance_count], collaborators)
     rescue => e
       @view_status.status = @view_status.error
       @view_status.message = e.message
     end
+    show_detail @view_status, true
+    render :controller => "repository", :action => "detail"
+  end
 
-    # アプリケーション詳細表示処理
-    # ######これ以降は、初期表示時もmodeが入っていても処理される
+  def del_collaborator
+    @view_status = ViewStatus::Status.new()
+    begin
+      collaborators = JSON.parse(params[:collaborators]).reject! {|col| col['email'] == params[:del_collaborator]}
+      message = {"2xx"=>"Succeeded in delete the collaborator!", "4xx"=>"Error in delete the collaborator!"}
+      detail_update(@view_status, message, params[:appid], params[:name], {"email"=>params[:owner]}, params[:instance_count], params[:instance_count], collaborators)
+    rescue => e
+      @view_status.status = @view_status.error
+      @view_status.message = e.message
+    end
+    show_detail @view_status, true
+    render :controller => "repository", :action => "detail"
+  end
+
+  def add_collaborator
+    @view_status = ViewStatus::Status.new()
+    begin
+      # コラボレータのIDが入力されていないときはエラー
+      if params['new_col'].blank?
+        @error_message_new_col_email = "Required"
+        raise "Required Error"
+      end
+      collaborators = JSON.parse(params[:collaborators]) << {"email"=>params['new_col'],"role"=>params['new_role']}
+      message = {"2xx"=>"Succeeded in add the collaborator!", "4xx"=>"Error in add the collaborator!"}
+      detail_update(@view_status, message, params[:appid], params[:name], {"email"=>params[:owner]}, params[:instance_count], params[:instance_count], collaborators)
+    rescue => e
+      @view_status.status = @view_status.error
+      @view_status.message = e.message
+    end
+    show_detail @view_status, true
+    render :controller => "repository", :action => "detail"
+  end
+
+  def mod_instance
+    @view_status = ViewStatus::Status.new()
+    begin
+      message = {"2xx"=>"Succeeded in changing the instance!", "4xx"=>"Error in changing the instance!"}
+      detail_update(@view_status, message, params[:appid], params[:name], {"email"=>params[:owner]}, params[:instance], params[:instance], JSON.parse(params[:collaborators]))
+    rescue => e
+      @view_status.status = @view_status.error
+      @view_status.message = e.message
+    end
+    show_detail @view_status, true
+    render :controller => "repository", :action => "detail"
+  end
+
+  def show_detail view_status, through_messege=false
     @app_detail = {}
     begin
       con = ApiConnector::Connect.new()
       # アプリケーションIDをもとに、アプリケーションの情報を取得する
       res = con.get("apps", params[:appid])
-      if params['mode'].blank?
-        @view_status.select_message(res)
-      end
-      if res.status >= 400
-        raise @view_status.message
+      if !through_messege
+        view_status.select_message(res)
       end
       app = JSON.parse(res.body)
-      #p app
       collaborators = []
       # 画面表示に必要なコラボレータの情報を、必要なものだけ格納
       app['collaborators'].each do |col|
@@ -120,27 +145,44 @@ class RepositoryController < ApplicationController
   end
   
   def create
-    # create処理(createボタン押下時のみ処理する。)
-    if params['mode'] == "execute"
-      @view_status = ViewStatus::Status.new()
-      begin
-        # アプリケーション名が入力されていない場合はエラー
-        if params['application_name'].blank?
-          raise "input application name!!"
-        else
-          postdata = '{"name":"' + params[:application_name] + '","owner":{"email":"' + session[:email] + '"}}'
-          con = ApiConnector::Connect.new()
-          # APIとの通信に成功した時のメッセージを設定
-          @view_status.http_message({"200"=>"Creating application Succeeded!"})
-          @view_status.select_message(con.post("apps", postdata))
-        end
-        # 成功時はhomeにリダイレクトする。
-        redirect_to :controller => "home", :action => "index"
-      rescue => e
-        @view_status.status = @view_status.error
-        @view_status.message = e.message
+  end
+  
+  def create_save
+    @view_status = ViewStatus::Status.new()
+    begin
+      # アプリケーション名が入力されていない場合はエラー
+      if params['application_name'].blank?
+        raise "input application name!!"
+      else
+        postdata = '{"name":"' + params[:application_name] + '","owner":{"email":"' + session[:email] + '"}}'
+        con = ApiConnector::Connect.new()
+        # APIとの通信に成功した時のメッセージを設定
+        @view_status.http_message({"200"=>"Creating application Succeeded!"})
+        @view_status.select_message(con.post("apps", postdata))
       end
+      # 成功時はhomeにリダイレクトする。
+      application_list @view_status, true
+      render :controller => "home", :action => "index"
+    rescue => e
+      @view_status.status = @view_status.error
+      @view_status.message = e.message
+      render :controller => "repository", :action => "create"
     end
+  end
+  
+  def delete
+    @view_status = ViewStatus::Status.new()
+    begin
+      con = ApiConnector::Connect.new()
+      # APIとの通信に成功した時のメッセージを設定
+      @view_status.http_message({"2xx"=>"Deleting application Succeeded!"})
+      @view_status.select_message(con.delete("apps", params[:appid]))
+    rescue => e
+      @view_status.status = @view_status.error
+      @view_status.message = e.message
+    end
+    application_list @view_status, true
+    render :controller => "home", :action => "index"
   end
   
   def upload
@@ -168,7 +210,8 @@ class RepositoryController < ApplicationController
             @view_status.select_message(con.file("warfiles", postdata))
           end
         end
-        redirect_to :controller => "home", :action => "index"
+        application_list @view_status, true
+        render :controller => "home", :action => "index"
       rescue => e
         @view_status.status = @view_status.error
         @view_status.message = e.message
@@ -181,12 +224,11 @@ class RepositoryController < ApplicationController
     @app_id = params[:appid]
     @app_name = params[:appname]
     @view_status = ViewStatus::Status.new()
+    @view_status.display({"200"=>false})
     begin
       con = ApiConnector::Connect.new()
       res = con.get("warfiles","");
-      if res.status >= 400
-        raise @view_status.message
-      end
+      @view_status.select_message(res)
       warfiles = JSON.parse(res.body)
       @disp_warfiles = []
       warfiles['warFiles'].each do |war|

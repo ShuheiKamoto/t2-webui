@@ -17,4 +17,16 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+  
+  def get_user_id email
+    con = ApiConnector::Connect.new()
+    res = con.get("users")
+    users = JSON.parse(res.body)
+    users.each do |user|
+      if session[:email] == user['email']
+        return user['id']
+        break
+      end
+    end
+  end
 end

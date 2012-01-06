@@ -26,10 +26,6 @@ class HomeController < ApplicationController
       con = ApiConnector::Connect.new()
       res = con.get("users")
       @view_status.select_message(res)
-      # APIとの通信に失敗した場合は、エラー内容を出力する。
-      if res.status >= 400
-        raise @view_status.message
-      end
       # ユーザ一覧からユーザIDとパスワードが一致するかの確認
       users = JSON.parse(res.body)
       users.each do |user|

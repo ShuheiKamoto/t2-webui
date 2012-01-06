@@ -7,10 +7,15 @@ module ApiConnector
       @client = HTTPClient.new
       @url = "http://" + API_SERVER + "/api/"
     end
-    #def delete()
+    def delete(api_name, key="")
       # delete
-    #end
+      if key != ""
+        key = "/" + key
+      end
+      request( :delete, api_name, key, nil, nil, nil)
+    end
     def get(api_name, key="", query=nil, body=nil)
+      # get
       header = [['content-type', 'application/json'], ['Accept', 'application/json']]
       if key != ""
         key = "/" + key
