@@ -24,11 +24,13 @@ Raspberry::Application.routes.draw do
     match 'applicationcreatesave', :to => :create_save
     match 'applicationdelete', :to => :delete
     match 'applicationupload', :to => :upload
+    match 'applicationuploadsave', :to => :upload_save
     match 'applicationhistory', :to => :history
     match 'modcollaboratorrole', :to => :mod_collaborator_role
     match 'delcollaborator', :to => :del_collaborator
     match 'addcollaborator', :to => :add_collaborator
     match 'modinstance', :to => :mod_instance
+    match 'deploy', :to => :deploy
   end
   
   controller :account do

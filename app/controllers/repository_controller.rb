@@ -187,48 +187,56 @@ class RepositoryController < ApplicationController
   
   def upload
     @app_name = params['appname']
-    if params[:mode] == "execute"
-      @view_status = ViewStatus::Status.new()
-      begin
-        # ファイル名が未入力のとき
-        if params[:warFile].blank?
-          raise "input war file path!!"
-        else
-          # アップロードされたファイルを取得する
-          file = params[:warFile]['warFile']
-          filename = file.original_filename
-          postdata = ""
-          # ファイルがある場合
-          if filename != "" then
-            con = ApiConnector::Connect.new()
-            # APIとの通信で成功したときのメッセージを設定
-            @view_status.http_message({"200"=>"Uploading Warfile Succeeded!"})
-            # APIへファイルを転送する
-            postdata = [{ 'Content-Disposition' => 'form-data; name="warFile"; filename="' + filename + '"' ,
-                          'Content-Type' => 'application/octet-stream', :content => file.read }, 
-                          { 'Content-Disposition' => 'form-data; name="name"', :content => @app_name}]
-            @view_status.select_message(con.file("warfiles", postdata))
-          end
+  end
+  
+  def upload_save
+    @app_name = params['appname']
+    @view_status = ViewStatus::Status.new()
+    begin
+      # ファイル名が未入力のとき
+      if params[:warFile].blank?
+        raise "input war file path!!"
+      else
+        # アップロードされたファイルを取得する
+        file = params[:warFile]['warFile']
+        filename = file.original_filename
+        postdata = ""
+        # ファイルがある場合
+        if filename != "" then
+          con = ApiConnector::Connect.new()
+          # APIとの通信で成功したときのメッセージを設定
+          @view_status.http_message({"200"=>"Uploading Warfile Succeeded!"})
+          # APIへファイルを転送する
+          postdata = [{ 'Content-Disposition' => 'form-data; name="warFile"; filename="' + filename + '"' ,
+                        'Content-Type' => 'application/octet-stream', :content => file.read }, 
+                        { 'Content-Disposition' => 'form-data; name="name"', :content => @app_name}]
+          @view_status.select_message(con.file("warfiles", postdata))
         end
-        application_list @view_status, true
-        render :controller => "home", :action => "index"
-      rescue => e
-        @view_status.status = @view_status.error
-        @view_status.message = e.message
       end
-      
+      application_list @view_status, true
+      render :controller => "home", :action => "index"
+    rescue => e
+      @view_status.status = @view_status.error
+      @view_status.message = e.message
+      render :controller => "repository", :action => "upload"
     end
   end
   
   def history
-    @app_id = params[:appid]
-    @app_name = params[:appname]
     @view_status = ViewStatus::Status.new()
     @view_status.display({"200"=>false})
+    history_list @view_status
+  end
+  
+  def history_list view_status, through_messege=false
+    @app_id = params[:appid]
+    @app_name = params[:appname]
     begin
       con = ApiConnector::Connect.new()
       res = con.get("warfiles","");
-      @view_status.select_message(res)
+      if !through_messege
+        view_status.select_message(res)
+      end
       warfiles = JSON.parse(res.body)
       @disp_warfiles = []
       warfiles['warFiles'].each do |war|
@@ -239,8 +247,25 @@ class RepositoryController < ApplicationController
         end
       end
     rescue => e
-      @view_status.status = @view_status.error
-      @view_status.message = e.message
+      view_status.status = @view_status.error
+      view_status.message = e.message
+    end
+  end
+  
+  def deploy
+    @view_status = ViewStatus::Status.new()
+    begin
+      postdata = '{"appName":"' + params[:appname] + '","appVersion":"' + params[:appversion] + '"}'
+      con = ApiConnector::Connect.new()
+      # APIとの通信に成功した時のメッセージを設定
+      @view_status.http_message({"2xx"=>"Updateing application Succeeded!"})
+      @view_status.select_message(con.put("app_version", postdata))
+      history_list @view_status, true
+    rescue => e
+      view_status.status = @view_status.error
+      view_status.message = e.message
+    ensure
+      render :controller => "repository", :action => "history"
     end
   end
 end

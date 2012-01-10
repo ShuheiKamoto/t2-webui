@@ -21,6 +21,7 @@
       <tr>
         <th class="blue header">Application Version</th>
         <th class="blue header">Date</th>
+        <th class="blue header">deploy</th>
       </tr>
     </thead>
     <tbody>
@@ -31,6 +32,14 @@
         </td>
         <td style="border:none">
           <%= warfile['date'] %>
+        </td>
+        <td style="border:none">
+          <%= form_tag({:action => 'deploy'}, {:method => "post"}) do %>
+            <input type="hidden" name="appid" value="<%= @app_id %>">
+            <input type="hidden" name="appname" value="<%= @app_name %>">
+            <input type="hidden" name="appversion" value="<%= warfile['version'] %>">
+            <input type="submit" class="btn primary" value="Deploy">
+          <% end %>
         </td>
       </tr>
       <% end %>
