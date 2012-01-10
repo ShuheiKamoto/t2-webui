@@ -10,6 +10,7 @@ module ViewStatus
     attr_reader :error
     attr_reader :success
     attr_reader :info
+    attr_reader :last_execute_status
     
     #attr_writer :display
     def display(view)
@@ -34,6 +35,11 @@ module ViewStatus
           view['403']=value
           view['404']=value
           view.delete('4xx')
+        end
+        if view.key?('5xx')
+          value = view['5xx']
+          view['500']=value
+          view.delete('5xx')
         end
         @display = @display.merge(view)
       end
@@ -63,6 +69,11 @@ module ViewStatus
           except['404']=value
           except.delete('4xx')
         end
+        if except.key?('5xx')
+          value = except['5xx']
+          except['500']=value
+          except.delete('5xx')
+        end
         @except = @except.merge(except)
       end
     end
@@ -91,6 +102,11 @@ module ViewStatus
           new_message['404']=value
           new_message.delete('4xx')
         end
+        if new_message.key?('5xx')
+          value = new_message['5xx']
+          new_message['500']=value
+          new_message.delete('5xx')
+        end
         @http_message = @http_message.merge(new_message)
       end
     end
@@ -114,7 +130,8 @@ module ViewStatus
                   "400"=>true,
                   "401"=>true,
                   "403"=>true,
-                  "404"=>true
+                  "404"=>true,
+                  "500"=>true
                  }
 
       @except = {"200"=>false,
@@ -125,7 +142,8 @@ module ViewStatus
                  "400"=>true,
                  "401"=>true,
                  "403"=>true,
-                 "404"=>true
+                 "404"=>true,
+                 "500"=>true
                 }
 
 
@@ -137,7 +155,8 @@ module ViewStatus
                        "400"=>"bad request",
                        "401"=>"unauthorized",
                        "403"=>"forbidden",
-                       "404"=>"not found"
+                       "404"=>"not found",
+                       "500"=>"internal server error"
                       }
     end
   
@@ -145,6 +164,9 @@ module ViewStatus
       if http_message.class != HTTP::Message
         return
       end
+      # 実行したHTTP_STATUSを返せるようにする
+      @last_execute_status = http_message.status
+      # 各HTTP_STATUSでの処理
       case http_message.status
       when 200
         create_message http_message, @success
@@ -164,16 +186,25 @@ module ViewStatus
         create_message http_message, @error
       when 404
         create_message http_message, @error
+      when 500
+        create_message http_message, @error
+      else
+        @status = @error
+        @message = "undefined status code (" + http_message.status.to_s + ")"
+        raise @message
       end
     end
     
     def create_message http_message, set_status
+      # 画面に表示するステータスを設定
       @status = set_status
+      # エラー時に帰ってくるbodyをメッセージに設定するか、標準か設定したメッセージを設定するか。
       if @use_body_message
         @message = http_message.body
       else
         @message = @http_message[http_message.status.to_s]
       end
+      # 画面にメッセージを表示するか
       if !@display[http_message.status.to_s]
         @status = @none
       end

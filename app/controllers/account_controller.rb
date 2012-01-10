@@ -77,10 +77,7 @@ class AccountController < ApplicationController
         con = ApiConnector::Connect.new()
         # APIとの通信に成功した時のメッセージを設定
         @view_status.http_message({"2xx"=>"Changing password Succeeded!"})
-        aaa = con.put("users", postdata)
-        @view_status.select_message(aaa)
-        p "############################"
-        p aaa.status.to_s
+        @view_status.select_message(con.put("users", postdata))
       end
     rescue => e
       @view_status.status = @view_status.error

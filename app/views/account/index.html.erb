@@ -69,8 +69,9 @@
         <table>
           <tr>
             <td style="border:none">
-              <%= form_tag({:action => 'add_application'}, {:method => "post"}) do %>
+              <%= form_tag({:action => 'add_application'}, {:method => "post", :class => "form-stacked", :style => "padding-left: 0px;"}) do %>
               <div class="clearfix <%= check_error(@error_message_new_app_name) %>">
+                <label class="blue">New Application Name</label>
                 <input class="xlarge <%= check_error(@error_message_new_app_name) %>" id="new_application_name" name="new_application_name" maxlength="30" type="text" placeholder="New Application Name" />
                 <span class="help-inline"><%= @error_message_new_app_name %></span>
               </div>
