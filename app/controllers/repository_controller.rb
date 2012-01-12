@@ -152,6 +152,7 @@ class RepositoryController < ApplicationController
     begin
       # アプリケーション名が入力されていない場合はエラー
       if params['application_name'].blank?
+        @error_message_appname = "Required"
         raise "input application name!!"
       else
         postdata = '{"name":"' + params[:application_name] + '","owner":{"email":"' + session[:email] + '"}}'
@@ -195,6 +196,7 @@ class RepositoryController < ApplicationController
     begin
       # ファイル名が未入力のとき
       if params[:warFile].blank?
+        @error_message_appfile = "Required"
         raise "input war file path!!"
       else
         # アップロードされたファイルを取得する
