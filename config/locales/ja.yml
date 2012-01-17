@@ -1,0 +1,12 @@
+ja:
+  explain_title_1: "Raspberryとは？"
+  explain_body_1: "Raspberry is a auto-scaling platform-as-a-service for Java applications.We let you free from the need for application servers or infrastructure."
+  explain_title_2: "Java向けのアジャイル開発環境"
+  explain_body_2: "Get up and running in minutes, and deploy instantly with git or uploading package. What all you need is pushing your code and we will deploy it. Focus 100% on your code, and never think about servers,instances, or VMs again."
+  explain_title_3: "どんなアプリケーションでもOK"
+  explain_body_3: "Run any web application with any web framework. Get direct, granular control over your app's workloads. Scale distributed processes automatically. Easily scale to millions of users."
+  explain_title_4: "始めてみるには？"
+  explain_body_4: "You can start building apps on us today. Free to Start, and it costs only when you upgrade to a higher plan."
+  sign_up_btn_title: "無料サインアップ"
+  top_message: "Forget servers, Focus 100% on your code!"
+  sign_up_btn_below_text: "基本機能は無料で使えます"
