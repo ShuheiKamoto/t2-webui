@@ -12,27 +12,27 @@
       <div class="container">
         <a class="brand" href="/"><img src="logo.png" width="200px" height="38px"  /></a>
         <ul class="nav">
-          <li class="active"><a href="/home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li class="active"><a href="/home"><%=t 'common_static_home'%></a></li>
+          <li><a href="#about"><%=t 'common_static_about'%></a></li>
+          <li><a href="#contact"><%=t 'common_static_contact'%></a></li>
         </ul>
         <% if session[:auth_key] %>
           <ul class="nav secondary-nav">
             <li class="menu">
               <a class="menu" href="#"><span class="label notice" style="text-transform: none;"><%= session[:email] %></span></a>
               <ul class="menu-dropdown">
-                <li><a href="/home">Apps</a></li>
-                <li><a href="/account">Account</a></li>
+                <li><a href="/home"><%=t 'common_static_apps'%></a></li>
+                <li><a href="/account"><%=t 'common_static_account'%></a></li>
                 <li class="divider"></li>
-                <li><a href="/signout">Sign out</a></li>
+                <li><a href="/signout"><%=t 'common_static_sign_out'%></a></li>
               </ul>
             </li>
           </ul>
         <% else %>
           <%= form_tag({:controller => "home", :action => 'authorize'}, {:method => "post", :class=>"pull-right"}) do %>
-            <input class="input-small" type="email" placeholder="Email" id="email" name="email" maxlength="30">
-            <input class="input-small" type="password" placeholder="Password" id="password" name="password" maxlength="30">
-            <button class="btn" type="submit">Sign in</button>
+            <input class="input-small" type="email" placeholder="<%=t 'common_static_email'%>" id="email" name="email" maxlength="30">
+            <input class="input-small" type="password" placeholder="<%=t 'common_static_password'%>" id="password" name="password" maxlength="30">
+            <button class="btn" type="submit"><%=t 'common_static_sign_in'%></button>
           <% end %>
         <% end %>
       </div>

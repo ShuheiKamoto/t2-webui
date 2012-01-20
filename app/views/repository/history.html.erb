@@ -5,12 +5,12 @@
     <table>
       <tr>
         <td style="border:none">
-          <p style="font-size: xx-large;width:600px;"><strong>Application history "<%= @app_name %>"</strong></p>
+          <p style="font-size: xx-large;width:600px;"><strong><%=t 'html_repository_text_history_title'%>"<%= @app_name %>"</strong></p>
         </td>
         <td style="border:none">
           <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
             <input type="hidden" name="appid" value="<%= @app_id %>">
-            <button class="btn primary">back to Detail</button>
+            <button class="btn primary"><%=t 'html_repository_btn_back_detail'%></button>
           <% end %>
         </td>
       </tr>
@@ -19,9 +19,9 @@
   <table id="history" class="zebra-striped">
     <thead>
       <tr>
-        <th class="blue header">Application Version</th>
-        <th class="blue header">Date</th>
-        <th class="blue header">deploy</th>
+        <th class="blue header"><%=t 'html_repository_text_application_version'%></th>
+        <th class="blue header"><%=t 'common_static_date'%></th>
+        <th class="blue header"><%=t 'common_static_deploy'%></th>
       </tr>
     </thead>
     <tbody>
@@ -38,7 +38,7 @@
             <input type="hidden" name="appid" value="<%= @app_id %>">
             <input type="hidden" name="appname" value="<%= @app_name %>">
             <input type="hidden" name="appversion" value="<%= warfile['version'] %>">
-            <input type="submit" class="btn primary" value="Deploy">
+            <input type="submit" class="btn primary" value="<%=t 'common_static_deploy'%>">
           <% end %>
         </td>
       </tr>

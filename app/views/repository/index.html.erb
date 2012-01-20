@@ -5,10 +5,10 @@
         <table>
           <tr>
             <td style="border:none">
-              <p style="font-size: xx-large;width:400px;"><strong>MyApps</strong></p>
+              <p style="font-size: xx-large;width:400px;"><strong><%=t 'html_repository_text_list_title'%></strong></p>
             </td>
             <td style="border:none">
-              <a class="btn primary" href="applicationcreate">create</a>
+              <a class="btn primary" href="applicationcreate"><%=t 'common_static_create'%></a>
             </td>
           </tr>
         </table>
@@ -16,10 +16,10 @@
     <table id="myapps" class="zebra-striped">
       <thead>
         <tr>
-          <th class="blue header">Application Name</th>
-          <th class="blue header">Application Detail</th>
-          <th class="blue header">Application WARfile</th>
-          <th class="blue header">Application Delete</th>
+          <th class="blue header"><%=t 'html_repository_text_application_name'%></th>
+          <th class="blue header"><%=t 'html_repository_text_application_detail'%></th>
+          <th class="blue header"><%=t 'html_repository_text_application_warfile'%></th>
+          <th class="blue header"><%=t 'html_repository_text_application_delete'%></th>
         </tr>
       </thead>
       <tbody>
@@ -29,20 +29,20 @@
           <td>
             <%= form_tag({:action => 'detail'}, {:method => "post"}) do %>
               <input type="hidden" name="appid" value="<%= app['id'] %>">
-              <input type="submit" class="btn info" value="Detail">
+              <input type="submit" class="btn info" value="<%=t 'common_static_detail'%>">
             <% end %>
           </td>
           <td>
             <%= form_tag({:action => 'upload'}, {:method => "post"}) do %>
               <input type="hidden" name="appid" value="<%= app['id'] %>">
               <input type="hidden" name="appname" value="<%= app['name'] %>">
-              <input type="submit" class="btn info" value="Upload">
+              <input type="submit" class="btn info" value="<%=t 'common_static_upload'%>">
             <% end %>
           </td>
           <td>
             <%= form_tag({:action => 'delete'}, {:method => "post"}) do %>
               <input type="hidden" name="appid" value="<%= app['id'] %>">
-              <input type="submit" class="btn error" value="Delete">
+              <input type="submit" class="btn error" value="<%=t 'common_static_delete'%>">
             <% end %>
           </td>
         </tr>

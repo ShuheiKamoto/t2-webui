@@ -1,17 +1,17 @@
 <div class="hero-unit">
   <div class="alert-message block-message info">
-    <p style="font-size: xx-large;width:400px;"><strong>Application create</strong></p>
+    <p style="font-size: xx-large;width:400px;"><strong><%=t 'html_repository_text_create_title'%></strong></p>
   </div>
   <%= form_tag({:action => 'create_save'}, {:method => "post"}) do %>
     <div class="clearfix <%= check_error(@error_message_appname) %>">
-      <label>Application Name</label>
+      <label><%=t 'html_repository_text_application_name'%></label>
       <div class="input">
-        <input class="xlarge <%= check_error(@error_message_appname) %>" id="application_name" name="application_name" maxlength="30" type="" placeholder="" value="<%= params[:application_name] %>" />
+        <input class="xlarge <%= check_error(@error_message_appname) %>" id="application_name" name="application_name" maxlength="30" type="" placeholder="<%=t 'html_repository_text_application_name'%>" value="<%= params[:application_name] %>" />
         <span class="help-inline"><%= @error_message_appname %></span>
       </div>
     </div>
     <div class="actions">
-      <input type="submit" class="btn primary" value="Create">&nbsp;
+      <input type="submit" class="btn primary" value="<%=t 'common_static_create'%>">&nbsp;
       <br>
     </div>
   <% end %>

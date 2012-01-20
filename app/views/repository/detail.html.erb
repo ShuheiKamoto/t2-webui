@@ -5,23 +5,23 @@
   <table id="myapps">
     <tbody>
     <tr>
-      <th class="blue">URL</th>
+      <th class="blue"><%=t 'html_repository_text_url'%></th>
       <td><%= @app_detail["url"] %></td>
     </tr>
     <tr>
-      <th class="blue">git address</th>
+      <th class="blue"><%=t 'html_repository_text_git_address'%></th>
       <td><%= @app_detail["git_repository"] %></td>
     </tr>
     <tr>
-      <th class="blue">datasource</th>
+      <th class="blue"><%=t 'html_repository_text_datasource'%></th>
       <td>jdbc/<%= @app_detail["datasource"] %></td>
     </tr>
     <tr>
-      <th class="blue">owner</th>
+      <th class="blue"><%=t 'html_repository_text_owner'%></th>
       <td><%= @app_detail["owner"] %></td>
     </tr>
     <tr>
-      <th class="blue">collaborators</th>
+      <th class="blue"><%=t 'html_repository_text_collaborators'%></th>
       <td style="padding-left:0px">
         <table>
           <% @app_detail["collaborators"].each do |col| %>
@@ -33,7 +33,7 @@
             <td style="border:none">
               <%= form_tag({:action => 'mod_collaborator_role'}, {:method => "post"}) do %>
                 <%= select_tag('mod_role' , options_for_select([["R","R"],["RW","RW"]], col['role']), { :class => 'small' }) %>
-                <input type="submit" class="btn success" value="U">
+                <input type="submit" class="btn success" value="<%=t 'common_static_update'%>">
                 <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
                 <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
                 <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
@@ -44,7 +44,7 @@
             </td>
             <td style="text-align:right; border:none">
               <%= form_tag({:action => 'del_collaborator'}, {:method => "post"}) do %>
-                <input type="submit" class="btn error" value="×">
+                <input type="submit" class="btn error" value="<%=t 'common_static_delete'%>">
                 <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
                 <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
                 <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
@@ -60,18 +60,18 @@
             <td style="border:none">
               <%= form_tag({:action => 'add_collaborator'}, {:method => "post"}) do %>
               <div class="clearfix <%= check_error(@error_message_new_col_email) %>">
-                <input class="xlarge <%= check_error(@error_message_new_col_email) %>" id="new_col" name="new_col" maxlength="30" type="email" placeholder="Email" value="<%= params[:email] %>" />
+                <input class="xlarge <%= check_error(@error_message_new_col_email) %>" id="new_col" name="new_col" maxlength="30" type="email" placeholder="<%=t 'common_static_email'%>" value="<%= params[:email] %>" />
                 <span class="help-inline"><%= @error_message_new_col_email %></span>
               </div>
             </td>
             <td style="border:none">
               <select id="new_role" name="new_role" class="small">
-                <option>R</option>
-                <option>RW</option>
+                <option><%=t 'common_static_role_read'%></option>
+                <option><%=t 'common_static_role_read_write'%></option>
               </select>
             </td>
             <td style="text-align:right; border:none">
-              <input type="submit" class="btn primary" value="＋">
+              <input type="submit" class="btn primary" value="<%=t 'common_static_add'%>">
             </td>
           </tr>
             <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
@@ -85,7 +85,7 @@
       </td>
     </tr>
     <tr>
-      <th class="blue">instance count</th>
+      <th class="blue"><%=t 'html_repository_text_instance_count'%></th>
       <td style="padding-left:0px">
         
         <table>
@@ -98,7 +98,7 @@
               </div>
             </td>
             <td style="text-align:right; border:none">
-              <input type="submit" class="btn success" value="U">
+              <input type="submit" class="btn success" value="<%=t 'common_static_update'%>">
             </td>
           </tr>
           <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
@@ -112,16 +112,16 @@
       </td>
     </tr>
     <tr>
-      <th class="blue">version</th>
+      <th class="blue"><%=t 'html_repository_text_version'%></th>
       <td><%= @app_detail["version"] %></td>
     </tr>
     <tr>
-      <th class="blue">history</th>
+      <th class="blue"><%=t 'html_repository_text_history'%></th>
       <td>
         <%= form_tag({:action => 'history'}, {:method => "post"}) do %>
           <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
           <input type="hidden" name="appname" value="<%= @app_detail["name"] %>">
-          <button class="btn info">view history list</button>
+          <button class="btn info"><%=t 'html_repository_btn_history'%></button>
         <% end %>
       </td>
     </tr>
