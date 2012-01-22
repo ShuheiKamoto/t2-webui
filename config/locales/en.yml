@@ -23,6 +23,7 @@ en:
   common_static_role_read_write: "RW"
   common_static_date: "Date"
   common_static_deploy: "Deploy"
+  common_static_copyright: "TIS 2011"
 
   html_global_text_title: "raspberry alpha"
 

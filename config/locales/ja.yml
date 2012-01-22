@@ -20,6 +20,7 @@ ja:
   common_static_role_read_write: "読み書き"
   common_static_date: "日付"
   common_static_deploy: "配置"
+  common_static_copyright: "TIS 2011"
 
   html_global_text_title: "ラズベリー α版"
 
