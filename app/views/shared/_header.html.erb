@@ -16,7 +16,7 @@
           <li><a href="#about"><%=t 'common_static_about'%></a></li>
           <li><a href="#contact"><%=t 'common_static_contact'%></a></li>
         </ul>
-        <% if session[:auth_key] %>
+        <% if session[:email] && session[:auth_access_token] && session[:auth_access_secret] %>
           <ul class="nav secondary-nav">
             <li class="menu">
               <a class="menu" href="#"><span class="label notice" style="text-transform: none;"><%= session[:email] %></span></a>

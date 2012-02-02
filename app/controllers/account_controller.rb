@@ -9,7 +9,7 @@ class AccountController < ApplicationController
   def show view_status, through_messege=false
     @consumer_key_list = []
     begin
-      con = ApiConnector::Connect.new()
+      con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
       res = con.get("consumer_key")
       if !through_messege
         view_status.select_message(res)
@@ -35,7 +35,7 @@ class AccountController < ApplicationController
         raise "input application name!!"
       else
         postdata = '{"userId":"' + get_user_id(session[:email]) + '","userSideAppName":"' + params[:new_application_name] + '"}}'
-        con = ApiConnector::Connect.new()
+        con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
         # APIとの通信に成功した時のメッセージを設定
         @view_status.http_message({"200"=>"Creating consumerKey Succeeded!"})
         @view_status.select_message(con.post("consumer_key", postdata))
@@ -51,7 +51,7 @@ class AccountController < ApplicationController
   def delete_application
     @view_status = ViewStatus::Status.new()
     begin
-      con = ApiConnector::Connect.new()
+      con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
       # APIとの通信に成功した時のメッセージを設定
       @view_status.http_message({"2xx"=>"Delete consumerKey Succeeded!"})
       @view_status.select_message(con.delete("consumer_key", params[:appid]))
@@ -74,7 +74,7 @@ class AccountController < ApplicationController
       else
         postdata = '{"email":"' + session[:email] + '","password":"' + params[:newpassword] + '","id":"' + get_user_id(session[:email]) + '"}'
         puts postdata
-        con = ApiConnector::Connect.new()
+        con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
         # APIとの通信に成功した時のメッセージを設定
         @view_status.http_message({"2xx"=>"Changing password Succeeded!"})
         @view_status.select_message(con.put("users", postdata))
@@ -94,7 +94,7 @@ class AccountController < ApplicationController
     @error_message_confirmpassword = ""
 
     correctPassword = false
-    con = ApiConnector::Connect.new()
+    con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
     res = con.get("users")
     # ユーザ一覧からユーザIDとパスワードが一致するかの確認
     users = JSON.parse(res.body)
@@ -131,7 +131,7 @@ class AccountController < ApplicationController
     @view_status = ViewStatus::Status.new()
     begin
       postdata = '{"userId":"' + get_user_id(session[:email]) + '","userSideAppName":"' + params[:appname] + '","id":"' + params[:appid] + '"}}'
-      con = ApiConnector::Connect.new()
+      con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
       # APIとの通信に成功した時のメッセージを設定
       @view_status.http_message({"2xx"=>"Updateing consumerKey Succeeded!"})
       @view_status.select_message(con.put("consumer_key", postdata))
