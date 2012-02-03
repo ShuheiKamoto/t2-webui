@@ -14,9 +14,7 @@ class RepositoryController < ApplicationController
         view_status.select_message(res)
       end
       # アプリケーション一覧の取得
-      puts "response = "+res.body
       apps = JSON.parse(res.body)
-      puts "JSON parse complete"
       apps.each do |app|
         if (app['owner'])['email'] == session[:email]
           @app_list << {"id"=>app['id'], "name"=>app['name']}
@@ -32,7 +30,6 @@ class RepositoryController < ApplicationController
     begin
       # [/api/apps]に必要なJSONを生成
       postdata = {"id"=>id, "name"=>name, "owner"=>owner, "minInstance"=>minInstance, "maxInstance"=>maxInstance, "collaborators"=>collaborators}
-      #puts postdata.to_json
       con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
       view_status.http_message(message)
       view_status.select_message(con.put("apps", postdata.to_json))
@@ -241,19 +238,14 @@ class RepositoryController < ApplicationController
       if !through_messege
         view_status.select_message(res)
       end
-      puts "response = "+res.body
       warfiles = JSON.parse(res.body)
-      puts "JSON parse complete"
       @disp_warfiles = []
-      puts "start input data to warfiles"
       warfiles.each do |war|
         if war['appName'] == @app_name then
           date_format = "%Y/%m/%d %X"
-          puts "date_format = "+ date_format
           @disp_warfiles << {"version" => war['fileId'],
                              "date" => Time.at(war['registDt'] / 1000).strftime(date_format)}
         end
-        puts war['appName'] +","+ @app_name
       end
     rescue => e
       view_status.status = @view_status.error
