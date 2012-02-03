@@ -73,7 +73,6 @@ class AccountController < ApplicationController
         raise "Please correct the error and then retry"
       else
         postdata = '{"email":"' + session[:email] + '","password":"' + params[:newpassword] + '","id":"' + get_user_id(session[:email]) + '"}'
-        puts postdata
         con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
         # APIとの通信に成功した時のメッセージを設定
         @view_status.http_message({"2xx"=>"Changing password Succeeded!"})
