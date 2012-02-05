@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
     # signup画面は認証不要なページ。
     unless params[:controller] == "signup"
       # auth_keyがセッションに入っていない場合は、home画面に転送する。
-      unless session[:auth_key]
+      unless session[:email] && session[:auth_access_token] && session[:auth_access_secret]
         # home画面の場合はhome画面に飛ばさないようにする。(永久ループ防止)
         return if params[:controller] == "home"
         # homeにリダイレクトする。
@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
   end
   
   def get_user_id email
-    con = ApiConnector::Connect.new()
+    con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
     res = con.get("users")
     users = JSON.parse(res.body)
     users.each do |user|

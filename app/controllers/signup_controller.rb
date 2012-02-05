@@ -15,7 +15,7 @@ class SignupController < ApplicationController
         raise "Please correct the error and then retry"
       else
         postdata = '{"email":"' + params[:email] + '","password":"' + params[:password] + '"}'
-        con = ApiConnector::Connect.new()
+        con = ApiConnector::Connect.new("","")
         # APIとの通信に成功した場合のメッセージを設定
         @view_status.http_message({"200"=>"Registration Success! Please enjoy after login."})
         @view_status.select_message(con.post("users", postdata))

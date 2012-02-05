@@ -161,36 +161,36 @@ module ViewStatus
     end
   
     def select_message(http_message)
-      if http_message.class != HTTP::Message
-        return
-      end
+      #if http_message.class != HTTP::Message
+      #  return
+      #end
       # 実行したHTTP_STATUSを返せるようにする
-      @last_execute_status = http_message.status
+      @last_execute_status = http_message.code
       # 各HTTP_STATUSでの処理
-      case http_message.status
-      when 200
+      case http_message.code
+      when "200"
         create_message http_message, @success
-      when 201
+      when "201"
         create_message http_message, @success
-      when 202
+      when "202"
         create_message http_message, @success
-      when 204
+      when "204"
         create_message http_message, @success
-      when 304
+      when "304"
         create_message http_message, @success
-      when 400
+      when "400"
         create_message http_message, @error
-      when 401
+      when "401"
         create_message http_message, @error
-      when 403
+      when "403"
         create_message http_message, @error
-      when 404
+      when "404"
         create_message http_message, @error
-      when 500
+      when "500"
         create_message http_message, @error
       else
         @status = @error
-        @message = "undefined status code (" + http_message.status.to_s + ")"
+        @message = "undefined status code (" + http_message.code + ")"
         raise @message
       end
     end
@@ -202,13 +202,13 @@ module ViewStatus
       if @use_body_message
         @message = http_message.body
       else
-        @message = @http_message[http_message.status.to_s]
+        @message = @http_message[http_message.code]
       end
       # 画面にメッセージを表示するか
-      if !@display[http_message.status.to_s]
+      if !@display[http_message.code]
         @status = @none
       end
-      if @except[http_message.status.to_s]
+      if @except[http_message.code]
         raise @message
       end
     end

@@ -8,7 +8,7 @@ class RepositoryController < ApplicationController
   def application_list view_status, through_messege=false
     @app_list = []
     begin
-      con = ApiConnector::Connect.new()
+      con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
       res = con.get("apps")
       if !through_messege
         view_status.select_message(res)
@@ -30,8 +30,7 @@ class RepositoryController < ApplicationController
     begin
       # [/api/apps]に必要なJSONを生成
       postdata = {"id"=>id, "name"=>name, "owner"=>owner, "minInstance"=>minInstance, "maxInstance"=>maxInstance, "collaborators"=>collaborators}
-      #puts postdata.to_json
-      con = ApiConnector::Connect.new()
+      con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
       view_status.http_message(message)
       view_status.select_message(con.put("apps", postdata.to_json))
     rescue => e
@@ -116,7 +115,7 @@ class RepositoryController < ApplicationController
   def show_detail view_status, through_messege=false
     @app_detail = {}
     begin
-      con = ApiConnector::Connect.new()
+      con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
       # アプリケーションIDをもとに、アプリケーションの情報を取得する
       res = con.get("apps", params[:appid])
       if !through_messege
@@ -156,7 +155,7 @@ class RepositoryController < ApplicationController
         raise "input application name!!"
       else
         postdata = '{"name":"' + params[:application_name] + '","owner":{"email":"' + session[:email] + '"}}'
-        con = ApiConnector::Connect.new()
+        con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
         # APIとの通信に成功した時のメッセージを設定
         @view_status.http_message({"200"=>"Creating application Succeeded!"})
         @view_status.select_message(con.post("apps", postdata))
@@ -174,7 +173,7 @@ class RepositoryController < ApplicationController
   def delete
     @view_status = ViewStatus::Status.new()
     begin
-      con = ApiConnector::Connect.new()
+      con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
       # APIとの通信に成功した時のメッセージを設定
       @view_status.http_message({"2xx"=>"Deleting application Succeeded!"})
       @view_status.select_message(con.delete("apps", params[:appid]))
@@ -205,7 +204,7 @@ class RepositoryController < ApplicationController
         postdata = ""
         # ファイルがある場合
         if filename != "" then
-          con = ApiConnector::Connect.new()
+          con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
           # APIとの通信で成功したときのメッセージを設定
           @view_status.http_message({"200"=>"Uploading Warfile Succeeded!"})
           # APIへファイルを転送する
@@ -234,14 +233,14 @@ class RepositoryController < ApplicationController
     @app_id = params[:appid]
     @app_name = params[:appname]
     begin
-      con = ApiConnector::Connect.new()
+      con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
       res = con.get("warfiles","");
       if !through_messege
         view_status.select_message(res)
       end
       warfiles = JSON.parse(res.body)
       @disp_warfiles = []
-      warfiles['warFiles'].each do |war|
+      warfiles.each do |war|
         if war['appName'] == @app_name then
           date_format = "%Y/%m/%d %X"
           @disp_warfiles << {"version" => war['fileId'],
@@ -258,7 +257,7 @@ class RepositoryController < ApplicationController
     @view_status = ViewStatus::Status.new()
     begin
       postdata = '{"appName":"' + params[:appname] + '","appVersion":"' + params[:appversion] + '"}'
-      con = ApiConnector::Connect.new()
+      con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
       # APIとの通信に成功した時のメッセージを設定
       @view_status.http_message({"2xx"=>"Updateing application Succeeded!"})
       @view_status.select_message(con.put("app_version", postdata))
