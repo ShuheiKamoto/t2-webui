@@ -45,7 +45,7 @@ module ApiConnector
         created_access_token = use_access_token(@access_token, @access_secret)
         response = created_access_token.post(@url+api_name,body,{'Accept'=>'application/json','Content-Type'=>'application/json'})
         return response
-#      end
+      end
     end
     def file(api_name, body=nil)
       # file
