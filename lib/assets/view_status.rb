@@ -114,7 +114,7 @@ module ViewStatus
     def initialize
       @status = "none"
       @message = ""
-      @use_body_message = false
+      @use_body_message = true
       
       @none = "none"
       @warning = "warning"
@@ -199,8 +199,9 @@ module ViewStatus
       # 画面に表示するステータスを設定
       @status = set_status
       # エラー時に帰ってくるbodyをメッセージに設定するか、標準か設定したメッセージを設定するか。
-      if @use_body_message
-        @message = http_message.body
+      if @use_body_message && set_status == @error
+        error_reponse_body = JSON.parse(http_message.body)
+        @message = error_reponse_body['message']
       else
         @message = @http_message[http_message.code]
       end
