@@ -16,9 +16,9 @@ class RepositoryController < ApplicationController
       # アプリケーション一覧の取得
       apps = JSON.parse(res.body)
       apps.each do |app|
-        if (app['owner'])['email'] == session[:email]
+        #if (app['owner'])['email'] == session[:email]
           @app_list << {"id"=>app['id'], "name"=>app['name']}
-        end
+        #end
       end
     rescue => e
       view_status.status = view_status.error
@@ -26,6 +26,7 @@ class RepositoryController < ApplicationController
     end
   end
 
+  #obsolete
   def detail_update(view_status, message, id, name, owner, minInstance, maxInstance, collaborators)
     begin
       # [/api/apps]に必要なJSONを生成
@@ -38,6 +39,7 @@ class RepositoryController < ApplicationController
     end
   end
 
+
   def detail
     @view_status = ViewStatus::Status.new()
     # APIとの通信が成功しても画面にメッセージを表示しない
@@ -48,16 +50,14 @@ class RepositoryController < ApplicationController
   def mod_collaborator_role
     @view_status = ViewStatus::Status.new()
     begin
-      collaborators = JSON.parse(params[:collaborators])
-      collaborators.each do |col|
-        if col['email']==params['mod_collaborator']
-          col['role']=params['mod_role']
-        end
-      end
       # 成功時・失敗時のメッセージを設定
       message = {"2xx"=>"Succeeded in changing the rules!", "4xx"=>"Error in changing the rules!"}
-      # 更新処理
-      detail_update(@view_status, message, params[:appid], params[:name], {"email"=>params[:owner]}, params[:instance_count], params[:instance_count], collaborators)
+
+      postdata = {"email"=>params['mod_collaborator'], "role"=>params['mod_role']}
+      puts postdata.to_json
+      con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
+      @view_status.http_message(message)
+      @view_status.select_message(con.put("apps/"+params[:appid]+"/collaborators/",postdata.to_json))
     rescue => e
       @view_status.status = @view_status.error
       @view_status.message = e.message
@@ -69,9 +69,12 @@ class RepositoryController < ApplicationController
   def del_collaborator
     @view_status = ViewStatus::Status.new()
     begin
-      collaborators = JSON.parse(params[:collaborators]).reject! {|col| col['email'] == params[:del_collaborator]}
       message = {"2xx"=>"Succeeded in delete the collaborator!", "4xx"=>"Error in delete the collaborator!"}
-      detail_update(@view_status, message, params[:appid], params[:name], {"email"=>params[:owner]}, params[:instance_count], params[:instance_count], collaborators)
+      
+	  postdata = {"email"=>params['del_collaborator']}
+	  con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
+	  @view_status.http_message(message)
+	  @view_status.select_message(con.delete("apps/"+params[:appid]+"/collaborators/"+CGI.escape(postdata['email'])))
     rescue => e
       @view_status.status = @view_status.error
       @view_status.message = e.message
@@ -88,9 +91,13 @@ class RepositoryController < ApplicationController
         @error_message_new_col_email = "Required"
         raise "Required Error"
       end
-      collaborators = JSON.parse(params[:collaborators]) << {"email"=>params['new_col'],"role"=>params['new_role']}
       message = {"2xx"=>"Succeeded in add the collaborator!", "4xx"=>"Error in add the collaborator!"}
-      detail_update(@view_status, message, params[:appid], params[:name], {"email"=>params[:owner]}, params[:instance_count], params[:instance_count], collaborators)
+
+	  # [/api/apps]に必要なJSONを生成
+	  postdata = {"email"=>params['new_col'], "role"=>params['new_role']}
+	  con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
+	  @view_status.http_message(message)
+	  @view_status.select_message(con.post("apps/"+params[:appid]+"/collaborators", postdata.to_json))
     rescue => e
       @view_status.status = @view_status.error
       @view_status.message = e.message
@@ -123,19 +130,22 @@ class RepositoryController < ApplicationController
       end
       app = JSON.parse(res.body)
       collaborators = []
-      # 画面表示に必要なコラボレータの情報を、必要なものだけ格納
-      app['collaborators'].each do |col|
-        collaborators << {"email"=>col['email'], "role"=>col['role']}
+      
+      res = con.get("apps/"+params[:appid]+"/collaborators")
+      collaborators_res = JSON.parse(res.body)
+      collaborators_res.each do | collaborator_res |
+        collaborators << {"email"=>collaborator_res['email'], "role"=>collaborator_res['role']}
       end
+
       # viewに転送するHash
       @app_detail = {"id" => app['id'], 
                     "name" => app['name'],
                     "url" => app['url'],
                     "git_repository" => app['git_repository'],
                     "datasource" => app['datasource'],
-                    "owner" => (app['owner'])['email'],
+                    "owner" => app['userId'],
                     "collaborators" => collaborators,
-                    "instance_count" => app['appServerInstance'].count.to_s,
+       #             "instance_count" => app['appServerInstance'].count.to_s,
                     "version" => app['appVersion']}
     rescue => e
       @view_status.status = @view_status.error
@@ -154,7 +164,7 @@ class RepositoryController < ApplicationController
         @error_message_appname = "Required"
         raise "input application name!!"
       else
-        postdata = '{"name":"' + params[:application_name] + '","owner":{"email":"' + session[:email] + '"}}'
+        postdata = '{"name":"' + params[:application_name] + '"}'
         con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
         # APIとの通信に成功した時のメッセージを設定
         @view_status.http_message({"200"=>"Creating application Succeeded!"})

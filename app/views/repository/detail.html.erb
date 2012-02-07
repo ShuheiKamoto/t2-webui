@@ -37,7 +37,7 @@
                 <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
                 <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
                 <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
-                <input type="hidden" name="instance_count" value="<%= @app_detail["instance_count"] %>">
+                <input type="hidden" name="instance_count" value="">
                 <input type="hidden" name="collaborators" value="<%= @app_detail["collaborators"].to_json %>">
                 <input type="hidden" name="mod_collaborator" value="<%= col['email'] %>">
               <% end %>
@@ -48,7 +48,7 @@
                 <input type="hidden" name="appid" value="<%= @app_detail["id"] %>">
                 <input type="hidden" name="name" value="<%= @app_detail["name"] %>">
                 <input type="hidden" name="owner" value="<%= @app_detail["owner"] %>">
-                <input type="hidden" name="instance_count" value="<%= @app_detail["instance_count"] %>">
+                <input type="hidden" name="instance_count" value="">
                 <input type="hidden" name="collaborators" value="<%= @app_detail["collaborators"].to_json %>">
                 <input type="hidden" name="del_collaborator" value="<%= col['email'] %>">
               <% end %>

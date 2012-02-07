@@ -37,20 +37,9 @@ class HomeController < ApplicationController
         :x_auth_password => params[:password],
         :x_auth_mode => "client_auth"
       })
-      # ログイン処理(ユーザ名・パスワードが一致すればOK)
-      con = ApiConnector::Connect.new(access_token.token,access_token.secret)
-      res = con.get("users")
-      @view_status.select_message(res)
-      # ユーザ一覧からユーザIDとパスワードが一致するかの確認
-      users = JSON.parse(res.body)
-      users.each do |user|
-        if params[:email] == user['email'] && Digest::SHA512.hexdigest(params[:password]) == user['password']
-          session[:auth_access_token] = access_token.token
-          session[:auth_access_secret] = access_token.secret
-          session[:email] = user['email']
-          break
-        end
-      end
+      session[:auth_access_token] = access_token.token
+      session[:auth_access_secret] = access_token.secret
+      session[:email] = params['email']
     rescue => e
       @view_status.status = @view_status.error
       @view_status.message = e.message
