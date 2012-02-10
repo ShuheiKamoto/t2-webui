@@ -218,10 +218,7 @@ class RepositoryController < ApplicationController
           # APIとの通信で成功したときのメッセージを設定
           @view_status.http_message({"200"=>"Uploading Warfile Succeeded!"})
           # APIへファイルを転送する
-          postdata = [{ 'Content-Disposition' => 'form-data; name="warFile"; filename="' + filename + '"' ,
-                        'Content-Type' => 'application/octet-stream', :content => file.read }, 
-                        { 'Content-Disposition' => 'form-data; name="name"', :content => @app_name}]
-          @view_status.select_message(con.file("warfiles", postdata))
+          @view_status.select_message(con.file("warfiles", "warFile", file.tempfile, filename, "name" => @app_name))
         end
       end
       application_list @view_status, true

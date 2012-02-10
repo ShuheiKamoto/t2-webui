@@ -1,12 +1,14 @@
 # coding: utf-8
 module ApiConnector
-  require 'httpclient'
+  require 'net/http'
+  require 'uri'
   require 'oauth'
+  require 'net/http/post/multipart'
+
+  Net::HTTP.version_1_2
 
   class Connect
     def initialize access_token,access_secret
-      @client = HTTPClient.new
-      #@url = "http://" + API_SERVER + "/api/"
       @site = "http://" + API_SERVER
       @url = "/api/"
       @access_token = access_token
@@ -27,37 +29,40 @@ module ApiConnector
         key = "/" + key
       end
       created_access_token = use_access_token(@access_token, @access_secret)
-      response = created_access_token.get(@url+api_name+key,{'Accept'=>'application/json'})
+      response = created_access_token.get(@url + api_name + key, {'Accept'=>'application/json'})
       return response
     end
     def put(api_name, body=nil)
       # put
       created_access_token = use_access_token(@access_token, @access_secret)
-      response = created_access_token.put(@url+api_name,body,{'Accept'=>'application/json','Content-Type'=>'application/json'})
+      response = created_access_token.put(@url + api_name, body, {'Accept' => 'application/json', 'Content-Type' => 'application/json'})
       return response
     end
     def post(api_name, body=nil)
       # post
+      response = nil
+      header = {'Accept' => 'application/json','Content-Type'=>'application/json'}
       if api_name == "users"
-        response = @client.request( method, @site + @url + api_name, query, body, header, nil)
-        return response
+        Net::HTTP.start(URI.parse(@site).host,URI.parse(@site).port) {|http|
+          response = http.post(@url + api_name, body, header)
+        }
       else
         created_access_token = use_access_token(@access_token, @access_secret)
-        response = created_access_token.post(@url+api_name,body,{'Accept'=>'application/json','Content-Type'=>'application/json'})
-        return response
+        response = created_access_token.post(@url + api_name, body, header)
       end
+      return response
     end
-    def file(api_name, body=nil)
+    def file(api_name, file_param_name, file_io, filename, post_params={})
       # file
       created_access_token = use_access_token(@access_token, @access_secret)
-      response = created_access_token.post(@url+api_name,body,{'Content-Type' => 'multipart/form-data;boundary=------------------------abcABC'})
+      post_data = { file_param_name => UploadIO.new(file_io, "application/octet-stream", filename) }
+      post_data = post_data.merge(post_params)
+      request = Net::HTTP::Post::Multipart.new(@url + api_name, post_data )
+      created_access_token.sign! request
+      response = Net::HTTP.start(URI.parse(@site).host,URI.parse(@site).port) do |http|
+        http.request(request)
+      end
       return response
-      #request( :post, api_name, "", nil, body, header)
-    end
-    def request(method, api_name, key="", query=nil, body=nil, header=nil)
-      #post    = url     body   header
-      #request = method  url    query  body  header  follow_redirect
-      @client.request( method, @site + @url + api_name + key, query, body, header, nil)
     end
     def use_access_token(access_token, access_secret)
       consumer = OAuth::Consumer.new(CONSUMER_KEY,CONSUMER_SECRET,{
