@@ -241,18 +241,16 @@ class RepositoryController < ApplicationController
     @app_name = params[:appname]
     begin
       con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
-      res = con.get("warfiles","");
+      res = con.get("apps/"+@app_id+"/warfiles","");
       if !through_messege
         view_status.select_message(res)
       end
       warfiles = JSON.parse(res.body)
       @disp_warfiles = []
       warfiles.each do |war|
-        if war['appName'] == @app_name then
           date_format = "%Y/%m/%d %X"
           @disp_warfiles << {"version" => war['fileId'],
                              "date" => Time.at(war['registDt'] / 1000).strftime(date_format)}
-        end
       end
     rescue => e
       view_status.status = @view_status.error
