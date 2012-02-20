@@ -20,6 +20,7 @@
     <thead>
       <tr>
         <th class="blue header"><%=t 'html_repository_text_application_version'%></th>
+        <th class="blue header">Uploaded By</th>
         <th class="blue header"><%=t 'common_static_date'%></th>
         <th class="blue header"><%=t 'common_static_deploy'%></th>
       </tr>
@@ -29,6 +30,9 @@
       <tr>
         <td style="border:none">
           <%= warfile['version'] %>
+        </td>
+        <td style="border:none">
+          <%= warfile['uploadedBy'] %>
         </td>
         <td style="border:none">
           <%= warfile['date'] %>

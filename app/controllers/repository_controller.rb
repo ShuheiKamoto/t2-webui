@@ -197,6 +197,7 @@ class RepositoryController < ApplicationController
   
   def upload
     @app_name = params['appname']
+    @app_id = params['appid']
   end
   
   def upload_save
@@ -218,7 +219,7 @@ class RepositoryController < ApplicationController
           # APIとの通信で成功したときのメッセージを設定
           @view_status.http_message({"200"=>"Uploading Warfile Succeeded!"})
           # APIへファイルを転送する
-          @view_status.select_message(con.file("warfiles", "warFile", file.tempfile, filename, "name" => @app_name))
+          @view_status.select_message(con.file("apps/#{params['appid']}/warfiles", "warFile", file.tempfile, filename, "name" => @app_name))
         end
       end
       application_list @view_status, true
@@ -241,7 +242,7 @@ class RepositoryController < ApplicationController
     @app_name = params[:appname]
     begin
       con = ApiConnector::Connect.new(session[:auth_access_token],session[:auth_access_secret])
-      res = con.get("apps/"+@app_id+"/warfiles","");
+      res = con.get("apps/"+@app_id+"/warfiles");
       if !through_messege
         view_status.select_message(res)
       end
@@ -250,7 +251,9 @@ class RepositoryController < ApplicationController
       warfiles.each do |war|
           date_format = "%Y/%m/%d %X"
           @disp_warfiles << {"version" => war['fileId'],
-                             "date" => Time.at(war['registDt'] / 1000).strftime(date_format)}
+                             "date" => Time.at(war['registDt'] / 1000).strftime(date_format),
+                             "uploadedBy" => war['uploadedBy']}
+          puts @disp_warfiles
       end
     rescue => e
       view_status.status = @view_status.error
