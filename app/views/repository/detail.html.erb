@@ -1,7 +1,18 @@
-<div class="alert-message block-message info">
-  <p style="font-size: xx-large;width:400px;"><strong><%= @app_detail["name"] %></strong></p>
-</div>
 <div class="hero-unit">
+	<div class="alert-message block-message info">
+	    <table>
+	      <tr>
+	        <td style="border:none">
+	          <p style="font-size: xx-large;width:600px;"><strong><%= @app_detail["name"] %></strong></p>
+	        </td>
+	        <td style="border:none">
+	          <%= form_tag({:action => :index}, {:method => "get"}) do %>
+	            <button class="btn primary"><%=t 'html_repository_btn_back_list'%></button>
+	          <% end %>
+	        </td>
+	      </tr>
+	    </table>
+	</div>
   <table id="myapps">
     <tbody>
     <tr>

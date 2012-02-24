@@ -37,6 +37,7 @@ ja:
   html_repository_btn_history: "履歴表示"
   html_repository_text_history_title: "アプリケーション履歴 "
   html_repository_btn_back_detail: "詳細表示に戻る"
+  html_repository_btn_back_list: "一覧表示に戻る"
   html_repository_text_application_version: "バージョン"
   html_repository_text_list_title: "アプリケーション一覧"
   html_repository_text_application_detail: "詳細確認"

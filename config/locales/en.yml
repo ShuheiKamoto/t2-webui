@@ -40,6 +40,7 @@ en:
   html_repository_btn_history: "View History List"
   html_repository_text_history_title: "Application History "
   html_repository_btn_back_detail: "Back To Detail"
+  html_repository_btn_back_list: "Back To List"
   html_repository_text_application_version: "Application Version"
   html_repository_text_list_title: "MyApps"
   html_repository_text_application_detail: "Application Detail"
