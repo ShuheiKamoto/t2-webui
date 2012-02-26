@@ -18,7 +18,7 @@ en:
   common_static_update: "Update"
   common_static_delete: "Delete"
   common_static_detail: "Detail"
-  common_static_upload: "UpLoad"
+  common_static_upload: "Upload"
   common_static_role_read: "R"
   common_static_role_read_write: "RW"
   common_static_date: "Date"
